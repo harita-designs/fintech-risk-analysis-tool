@@ -1,25 +1,30 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import PortfolioOverview from './screens/PortfolioOverview';
+import RiskAnalysisWorkspace from './screens/RiskAnalysisWorkspace';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default function App() {
+  const [screen, setScreen]       = useState('portfolio');
+  const [selectedBorrower, setSelectedBorrower] = useState(null);
+
+  const handleSelectBorrower = (borrower) => {
+    setSelectedBorrower(borrower);
+    setScreen('workspace');
+  };
+
+  const handleBack = () => {
+    setScreen('portfolio');
+    setSelectedBorrower(null);
+  };
+
+  if (screen === 'workspace' && selectedBorrower) {
+    return (
+      <RiskAnalysisWorkspace
+        borrower={selectedBorrower}
+        onBack={handleBack}
+      />
+    );
+  }
+
+  return <PortfolioOverview onSelectBorrower={handleSelectBorrower} />;
 }
-
-export default App;
