@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { imgXCircle, imgAlertCircle } from '../assets/images';
 
 function SignalItem({ signal }) {
@@ -43,6 +44,7 @@ function SignalItem({ signal }) {
 }
 
 export default function RiskSignals({ signals, totalCount }) {
+  const [viewAllHovered, setViewAllHovered] = useState(false);
   const visible = signals.slice(0, 3);
 
   return (
@@ -77,10 +79,19 @@ export default function RiskSignals({ signals, totalCount }) {
       </div>
 
       {/* View all */}
-      <span style={{
-        fontSize: 14, fontWeight: 400, color: '#081732',
-        lineHeight: '20px', letterSpacing: '-0.15px', cursor: 'pointer',
-      }}>
+      <span
+        onClick={() => {}}
+        onMouseEnter={() => setViewAllHovered(true)}
+        onMouseLeave={() => setViewAllHovered(false)}
+        style={{
+          fontSize: 14, fontWeight: 400,
+          color: viewAllHovered ? '#2871fa' : '#081732',
+          lineHeight: '20px', letterSpacing: '-0.15px',
+          cursor: 'pointer',
+          textDecoration: viewAllHovered ? 'underline' : 'none',
+          transition: 'color 0.15s',
+        }}
+      >
         View all {totalCount} signals  →
       </span>
     </div>

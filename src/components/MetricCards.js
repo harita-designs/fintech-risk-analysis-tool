@@ -2,26 +2,27 @@ import { imgRevenueIcon, imgCashFlowIcon, imgDebtIcon, imgLiquidityIcon } from '
 
 const GRADIENT = 'linear-gradient(116.96deg, rgba(40,113,250,0.05) 50.33%, rgba(103,23,205,0.05) 95.81%)';
 
-function TrendBadge({ value, up }) {
+function TrendBadge({ value, arrowUp, danger }) {
+  const color = danger ? '#e9000b' : '#05c04b';
   return (
     <div style={{
-      background: up ? '#05c04b' : '#e9000b',
+      background: danger ? 'rgba(233,0,11,0.08)' : 'rgba(5,192,75,0.08)',
       borderRadius: 10, padding: '0 10px',
       display: 'inline-flex', alignItems: 'center', flexShrink: 0,
     }}>
-      <span style={{ fontSize: 14, fontWeight: 700, lineHeight: '20px', color: '#fefdff', letterSpacing: '-0.15px', whiteSpace: 'nowrap' }}>
-        {up ? '↑' : '↓'} {value}
+      <span style={{ fontSize: 14, fontWeight: 700, lineHeight: '20px', color, letterSpacing: '-0.15px', whiteSpace: 'nowrap' }}>
+        {arrowUp ? '↑' : '↓'} {value}
       </span>
     </div>
   );
 }
 
-function MetricCard({ icon, label, value, trend, up }) {
+function MetricCard({ icon, label, value, trend, arrowUp, danger }) {
   return (
     <div style={{
       flex: '1 0 0', minWidth: 0,
       padding: 24, borderRadius: 30,
-      border: '0.3px solid #14397d', background: GRADIENT,
+      background: GRADIENT,
       display: 'flex', flexDirection: 'column', gap: 16,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
@@ -35,7 +36,7 @@ function MetricCard({ icon, label, value, trend, up }) {
           {value}
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <TrendBadge value={trend} up={up} />
+          <TrendBadge value={trend} arrowUp={arrowUp} danger={danger} />
           <span style={{ fontSize: 14, fontWeight: 400, color: '#808080', letterSpacing: '-0.15px', whiteSpace: 'nowrap' }}>
             vs last quarter
           </span>
@@ -48,10 +49,10 @@ function MetricCard({ icon, label, value, trend, up }) {
 export default function MetricCards() {
   return (
     <div style={{ display: 'flex', gap: 20, alignItems: 'stretch' }}>
-      <MetricCard icon={imgRevenueIcon}   label="Revenue"         value="$89.2M" trend="8.7%"  up={false} />
-      <MetricCard icon={imgCashFlowIcon}  label="Cash Flow"       value="$4.1M"  trend="22.1%" up={false} />
-      <MetricCard icon={imgDebtIcon}      label="Debt Exposure"   value="$54.8M" trend="12%"   up={true}  />
-      <MetricCard icon={imgLiquidityIcon} label="Liquidity Ratio" value="1.12"   trend="0.08%" up={false} />
+      <MetricCard icon={imgRevenueIcon}   label="Revenue"         value="$89.2M" trend="8.7%"  arrowUp={false} danger={true} />
+      <MetricCard icon={imgCashFlowIcon}  label="Cash Flow"       value="$4.1M"  trend="22.1%" arrowUp={false} danger={true} />
+      <MetricCard icon={imgDebtIcon}      label="Debt Exposure"   value="$54.8M" trend="12%"   arrowUp={true}  danger={true} />
+      <MetricCard icon={imgLiquidityIcon} label="Liquidity Ratio" value="1.12"   trend="0.08%" arrowUp={false} danger={true} />
     </div>
   );
 }

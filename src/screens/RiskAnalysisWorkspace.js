@@ -7,28 +7,22 @@ import MetricCards from '../components/MetricCards';
 import FinancialChart from '../components/FinancialChart';
 import RiskProfileChart from '../components/RiskProfileChart';
 import RiskSignals from '../components/RiskSignals';
-import CovenantTracking from '../components/CovenantTracking';
+import FinancialPerformanceTab from '../components/FinancialPerformanceTab';
 import { techCorpFinancials, techCorpRiskProfile, techCorpSignals } from '../data/borrowers';
 
 function OverviewTab() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 25 }}>
-      {/* Charts + signals row */}
-      <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
-        {/* Left column — charts */}
-        <div style={{ flex: '0 0 856px', display: 'flex', flexDirection: 'column', gap: 25 }}>
-          <FinancialChart data={techCorpFinancials} />
-          <RiskProfileChart metrics={techCorpRiskProfile} />
-        </div>
-
-        {/* Right column — active alerts */}
-        <div style={{ flex: '0 0 515px' }}>
-          <RiskSignals signals={techCorpSignals} totalCount={5} />
-        </div>
+    <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
+      {/* Left column — grows to fill remaining width */}
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 25 }}>
+        <FinancialChart data={techCorpFinancials} />
+        <RiskProfileChart metrics={techCorpRiskProfile} />
       </div>
 
-      {/* Covenant Tracking — full width below */}
-      <CovenantTracking />
+      {/* Right column — fixed width */}
+      <div style={{ flex: '0 0 515px' }}>
+        <RiskSignals signals={techCorpSignals} totalCount={5} />
+      </div>
     </div>
   );
 }
@@ -52,7 +46,7 @@ export default function RiskAnalysisWorkspace({ borrower, onBack }) {
   const renderTab = () => {
     switch (activeTab) {
       case 'Overview':               return <OverviewTab />;
-      case 'Financial Performance':  return <PlaceholderTab label="Financial Performance" />;
+      case 'Financial Performance':  return <FinancialPerformanceTab />;
       case 'Risk Signals':           return <PlaceholderTab label="Risk Signals" />;
       case 'Contextual Insights':    return <PlaceholderTab label="Contextual Insights" />;
       default:                       return null;
@@ -76,11 +70,13 @@ export default function RiskAnalysisWorkspace({ borrower, onBack }) {
             <TabNav activeTab={activeTab} onTabChange={setActiveTab} />
           </div>
 
-          {/* Metric KPI cards */}
-          <MetricCards />
+          {/* Metric KPI cards — hidden on Financial Performance tab */}
+          {activeTab !== 'Financial Performance' && <MetricCards />}
 
-          {/* Tab content */}
-          {renderTab()}
+          {/* Tab content — keyed so animation replays on every switch */}
+          <div key={activeTab} style={{ animation: 'tabFadeIn 0.25s ease both' }}>
+            {renderTab()}
+          </div>
         </div>
       </div>
 

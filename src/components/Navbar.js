@@ -200,7 +200,7 @@ export default function Navbar({ onSelectBorrower }) {
       position: 'sticky', top: 0, zIndex: 100,
       width: '100%',
     }}>
-      <img src={imgLogo} alt="Dragin" style={{ height: 35, width: 100, objectFit: 'contain', flexShrink: 0 }} />
+      <div style={{ height: 35, width: 100, flexShrink: 0 }} />
 
       <SearchBar onSelectBorrower={onSelectBorrower} />
 

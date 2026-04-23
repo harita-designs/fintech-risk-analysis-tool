@@ -23,3 +23,9 @@ button {
 html {
   scroll-behavior: smooth;
 }
+
+/* Tab content entrance animation */
+@keyframes tabFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

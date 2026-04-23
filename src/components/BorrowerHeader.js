@@ -1,7 +1,9 @@
-import { imgBackBtnBg, imgBackArrow, imgAlertTriangle } from '../assets/images';
+import { useState } from 'react';
+import { imgBackBtnBg, imgBackBtnBgHover, imgBackArrow, imgBackArrowHover, imgAlertTriangle } from '../assets/images';
 import { riskColor } from '../data/borrowers';
 
 export default function BorrowerHeader({ borrower, onBack }) {
+  const [backHovered, setBackHovered] = useState(false);
   const rc = riskColor(borrower.riskLevel);
   const GRADIENT = 'linear-gradient(164.3deg, rgba(40,113,250,0.05) 50.33%, rgba(103,23,205,0.05) 95.81%)';
 
@@ -16,13 +18,15 @@ export default function BorrowerHeader({ borrower, onBack }) {
         {/* Back button */}
         <button
           onClick={onBack}
+          onMouseEnter={() => setBackHovered(true)}
+          onMouseLeave={() => setBackHovered(false)}
           style={{
             position: 'relative', width: 50, height: 50, flexShrink: 0,
             border: 'none', background: 'transparent', cursor: 'pointer', padding: 0,
           }}
         >
-          <img src={imgBackBtnBg} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
-          <img src={imgBackArrow} alt="Back" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', padding: 10 }} />
+          <img src={backHovered ? imgBackBtnBgHover : imgBackBtnBg} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+          <img src={backHovered ? imgBackArrowHover : imgBackArrow} alt="Back" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', padding: 10 }} />
         </button>
 
         {/* Name + status + meta */}

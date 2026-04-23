@@ -3,13 +3,14 @@ import { imgTransaction, imgRating, imgWarningShield, imgSurvey } from '../asset
 const GRADIENT = 'linear-gradient(116.96deg, rgba(40,113,250,0.05) 50.33%, rgba(103,23,205,0.05) 95.81%)';
 
 function TrendBadge({ text, green }) {
+  const color = green ? '#05c04b' : '#e9000b';
   return (
     <div style={{
-      background: green ? '#05c04b' : '#e9000b',
+      background: green ? 'rgba(5,192,75,0.08)' : 'rgba(233,0,11,0.08)',
       borderRadius: 10, padding: '0 10px',
       display: 'inline-flex', alignItems: 'center',
     }}>
-      <span style={{ fontSize: 14, fontWeight: 700, lineHeight: '20px', color: '#fefdff', letterSpacing: '-0.15px' }}>
+      <span style={{ fontSize: 14, fontWeight: 700, lineHeight: '20px', color, letterSpacing: '-0.15px' }}>
         {text}
       </span>
     </div>
@@ -20,7 +21,7 @@ function KpiCard({ icon, label, value, trend, valueColor }) {
   return (
     <div style={{
       flex: '1 0 0', minWidth: 0, padding: 24, borderRadius: 30,
-      border: '0.3px solid #14397d', background: GRADIENT,
+      background: GRADIENT,
       display: 'flex', flexDirection: 'column', gap: 16,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>

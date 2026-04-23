@@ -22,7 +22,7 @@ export default function TabNav({ activeTab, onTabChange }) {
               color: isActive ? '#f8f7ff' : '#081732',
               letterSpacing: '0.07px', whiteSpace: 'nowrap',
               fontFamily: 'Outfit, sans-serif',
-              transition: 'background 0.15s',
+              transition: 'background 0.2s ease, color 0.2s ease',
             }}
           >
             {tab}

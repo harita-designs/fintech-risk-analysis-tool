@@ -26,7 +26,7 @@ export default function Footer() {
       fontSize: 14, fontWeight: 400, lineHeight: '20px',
       color: '#081732', letterSpacing: '-0.15px',
     }}>
-      <span>© 2026 Dragin. All rights reserved.</span>
+      <span>© 2026 All rights reserved.</span>
       <div style={{ display: 'flex', gap: 20 }}>
         {['Documentation', 'API Status', 'Support'].map(link => (
           <FooterLink key={link} label={link} />

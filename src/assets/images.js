@@ -30,9 +30,11 @@ export const imgArrowLeftHover   = "https://www.figma.com/api/mcp/asset/8be66d35
 export const imgArrowCircle      = "https://www.figma.com/api/mcp/asset/760db831-48c9-4d2d-bdc0-4eab32a0d690";
 export const imgArrowCircleBlue  = "https://www.figma.com/api/mcp/asset/d9b710e5-da12-4d32-8f87-99dd8a28b3e6";
 
-// Screen 2 — Borrower header
-export const imgBackBtnBg    = "https://www.figma.com/api/mcp/asset/c8007f9d-1216-4ae1-b8d0-3afa549d310f";
-export const imgBackArrow    = "https://www.figma.com/api/mcp/asset/4b4e5afd-9b29-487f-ac36-490200ba6119";
+// Screen 2 — Borrower header back button (Default + Hover)
+export const imgBackBtnBg       = "https://www.figma.com/api/mcp/asset/754ab1f6-6b74-4518-acaa-0d4722b45acf";
+export const imgBackBtnBgHover  = "https://www.figma.com/api/mcp/asset/5355a33c-22eb-4866-90f8-6763008e9705";
+export const imgBackArrow       = "https://www.figma.com/api/mcp/asset/0593a45f-b5da-4cec-8c57-47f741725409";
+export const imgBackArrowHover  = "https://www.figma.com/api/mcp/asset/b09348d2-05fe-478a-827c-7127d147d34d";
 
 // Screen 2 — Metric card icons
 export const imgRevenueIcon  = "https://www.figma.com/api/mcp/asset/5c20173e-e6c8-4680-bbe3-c3ef3a386198";
@@ -47,3 +49,17 @@ export const imgAlertCircle  = "https://www.figma.com/api/mcp/asset/5d42d7d4-a5c
 // Screen 2 — Covenant Tracking
 export const imgCovenantXCircle = "https://www.figma.com/api/mcp/asset/efb4a155-424b-45fb-ae52-61df79db4950";
 export const imgLine17          = "https://www.figma.com/api/mcp/asset/c0cf17cf-cb56-4111-9be9-9f6064bd2cac";
+
+// Screen 2.1 — Financial Performance tab
+export const imgCheckCircle       = "https://www.figma.com/api/mcp/asset/49278f0a-cb8b-488e-aa20-d946da64d5d4";
+export const imgAlertCircleYellow = "https://www.figma.com/api/mcp/asset/66e3228a-98b2-4ab8-a3f9-757b833d4b33";
+
+// Screen 2.2 — Financial Performance tab ratio icons (fresh URLs)
+export const imgFPCheckCircle = "https://www.figma.com/api/mcp/asset/857c285a-5a9d-47be-bd83-7e67efbfe7d0";
+export const imgFPAlertCircle = "https://www.figma.com/api/mcp/asset/081d0938-ab4c-4c47-b130-691c82ce10f1";
+
+// Screen 2.1 Overview — Financial Trends chart legend dots
+export const imgDotRevenue  = "https://www.figma.com/api/mcp/asset/74e0fd3d-10d7-4274-bfed-82bbff0b005f";
+export const imgDotCashFlow = "https://www.figma.com/api/mcp/asset/3525f50a-1e3e-4430-ac71-b1975d922c0a";
+export const imgDotDebt     = "https://www.figma.com/api/mcp/asset/cfd35aff-e9cf-45eb-b4b7-9828b4370711";
+export const imgDotDark     = "https://www.figma.com/api/mcp/asset/69e336ab-6e26-4a3a-ad5e-20e639702207";
