@@ -98,24 +98,30 @@ function BarTooltip({ quarter, label, value, cssX, cssY, wrapperW }) {
   );
 }
 
-function LineTooltip({ quarter, label, value, cssX, cssY, wrapperW }) {
-  const TW = 140, TH = 72;
+function LineTooltip({ quarter, label, value, stroke, cssX, cssY, wrapperW }) {
+  const TW = 200;
   const left = Math.max(0, Math.min(cssX - TW / 2, wrapperW - TW));
-  const top  = cssY - TH - 14 > 5 ? cssY - TH - 14 : cssY + 14;
+  const top  = cssY - 80 - 14 > 5 ? cssY - 80 - 14 : cssY + 14;
   return (
     <div style={{
       position: 'absolute', left, top, width: TW,
-      background: '#fefdff', borderRadius: 20, padding: 20,
+      background: '#fefdff', borderRadius: 20, padding: '16px 20px',
       display: 'flex', flexDirection: 'column', gap: 10,
-      boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+      boxShadow: '0 4px 16px rgba(0,0,0,0.10)',
       pointerEvents: 'none', zIndex: 20,
     }}>
-      <span style={{ fontSize: 8, fontWeight: 600, color: '#000', lineHeight: '16px', whiteSpace: 'nowrap' }}>
+      <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: 11, fontWeight: 600, color: '#808080', lineHeight: '16px' }}>
         {quarter}
       </span>
-      <span style={{ fontSize: 14, fontWeight: 400, color: '#000', lineHeight: '20px', letterSpacing: '-0.15px', whiteSpace: 'nowrap' }}>
-        {label}: {value}
-      </span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ width: 8, height: 8, borderRadius: '50%', background: stroke, flexShrink: 0 }} />
+        <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: 14, fontWeight: 400, color: '#364153', flex: 1, lineHeight: '20px', letterSpacing: '-0.15px' }}>
+          {label}
+        </span>
+        <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: 14, fontWeight: 600, color: '#101828', lineHeight: '20px', letterSpacing: '-0.15px' }}>
+          {value}
+        </span>
+      </div>
     </div>
   );
 }
@@ -208,8 +214,9 @@ function LineChartSVG({ data, stroke, tooltipLabel }) {
         <SvgGrid xFn={toLineX} />
         <path d={smoothPath(pts)} fill="none" stroke={stroke} strokeWidth="2" strokeOpacity="0.85" />
         {pts.map(([x, y], i) => (
-          <circle key={i} cx={x} cy={y} r={5} fill={stroke}
-            opacity={hovered && hovered.idx === i ? 1 : 0.7} />
+          <circle key={i} cx={x} cy={y}
+            r={hovered && hovered.idx === i ? 0 : 4}
+            fill={stroke} stroke="#fefdff" strokeWidth="1.5" />
         ))}
         {hovered && (
           <line
@@ -218,10 +225,15 @@ function LineChartSVG({ data, stroke, tooltipLabel }) {
             stroke="rgba(40,113,250,0.35)" strokeWidth="1" strokeDasharray="4 3"
           />
         )}
+        {hovered && (
+          <circle
+            cx={toLineX(hovered.idx)} cy={toY(data[hovered.idx])} r={6}
+            fill={stroke} stroke="#fefdff" strokeWidth="2" />
+        )}
       </svg>
       {hovered && (
         <LineTooltip
-          quarter={QUARTERS[hovered.idx]} label={tooltipLabel}
+          quarter={QUARTERS[hovered.idx]} label={tooltipLabel} stroke={stroke}
           value={data[hovered.idx]} cssX={hovered.cssX}
           cssY={hovered.cssY} wrapperW={hovered.wrapperW}
         />
@@ -294,7 +306,7 @@ function RatioCard({ ratio }) {
       <span style={{ fontSize: 24, fontWeight: 600, color: '#101828', letterSpacing: '0.72px', lineHeight: '32px' }}>
         {ratio.value}
       </span>
-      <span style={{ fontSize: 8, fontWeight: 600, color: '#808080', letterSpacing: '-0.1px', lineHeight: '16px' }}>
+      <span style={{ fontSize: 14, fontWeight: 600, color: '#808080', letterSpacing: '-0.1px', lineHeight: '20px', marginTop: 10 }}>
         {ratio.required}
       </span>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

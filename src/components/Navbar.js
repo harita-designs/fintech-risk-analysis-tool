@@ -172,6 +172,34 @@ function SearchBar({ onSelectBorrower }) {
   );
 }
 
+function HomeBtn({ onBack }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      title="Home"
+      onClick={onBack}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        width: 50, height: 50, flexShrink: 0, cursor: 'pointer',
+        borderRadius: '50%',
+        background: hovered ? '#2871fa' : '#f8f7ff',
+        border: hovered ? 'none' : '0.3px solid #14397d',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        transition: 'background 0.15s, border 0.15s',
+      }}
+    >
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <path
+          d="M2 8.5L11 2L20 8.5V19C20 19.5523 19.5523 20 19 20H14.5V14.5C14.5 14.2239 14.2761 14 14 14H8C7.72386 14 7.5 14.2239 7.5 14.5V20H3C2.44772 20 2 19.5523 2 19V8.5Z"
+          stroke={hovered ? '#ffffff' : '#081732'}
+          strokeWidth="2" strokeLinejoin="round"
+        />
+      </svg>
+    </div>
+  );
+}
+
 function ProfileBtn() {
   const [hovered, setHovered] = useState(false);
   return (
@@ -191,7 +219,7 @@ function ProfileBtn() {
   );
 }
 
-export default function Navbar({ onSelectBorrower }) {
+export default function Navbar({ onSelectBorrower, onBack }) {
   return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: 24,
@@ -205,6 +233,7 @@ export default function Navbar({ onSelectBorrower }) {
       <SearchBar onSelectBorrower={onSelectBorrower} />
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 25, flexShrink: 0 }}>
+        {onBack && <HomeBtn onBack={onBack} />}
         <NavIconBtn icon={imgBarChart} label="Analytics" />
         <NavIconBtn icon={imgComments} label="Comments" />
         <NavIconBtn icon={imgSettings} label="Settings" />

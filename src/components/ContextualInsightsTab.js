@@ -1,0 +1,632 @@
+import { useState, useRef } from 'react';
+import {
+  imgExtLinkUp, imgXCircleRed,
+  imgCIAvatar1, imgCIAvatar2,
+  imgCIDocPdf, imgCIDocBank, imgCIDocLoan, imgCIDownload,
+} from '../assets/images';
+
+const TEXT          = { fontFamily: 'Outfit, sans-serif' };
+const CARD_BG       = 'linear-gradient(117.9deg, rgba(40,113,250,0.05) 50.33%, rgba(103,23,205,0.05) 95.81%)';
+const BLUE_FILTER   = 'invert(30%) sepia(100%) saturate(2000%) hue-rotate(210deg) brightness(100%)';
+const PURPLE_FILTER = 'invert(25%) sepia(100%) saturate(2500%) hue-rotate(260deg) brightness(90%)';
+
+// ── Chart geometry ────────────────────────────────────────────────
+const W = 780, H = 580;
+const PAD_L = 45, PAD_R = 15, PAD_T = 20, PAD_B = 120;
+const chartW = W - PAD_L - PAD_R;
+const chartH = H - PAD_T - PAD_B;
+const Y_LABELS = [100, 75, 50, 25, 0];
+
+const QUARTERS = [
+  "Q1'23","Q2'23","Q3'23","Q4'23",
+  "Q1'24","Q2'24","Q3'24","Q4'24",
+  "Q1'25","Q2'25","Q3'25","Q4'25","Q1'26",
+];
+const N = QUARTERS.length;
+
+const toX = i => PAD_L + (i / (N - 1)) * chartW;
+const toY = v => PAD_T + (1 - v / 100) * chartH;
+
+// Catmull-Rom → cubic bezier for smooth curves through every point
+function smoothPath(pts) {
+  if (pts.length < 2) return '';
+  let d = `M ${pts[0][0]},${pts[0][1]}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[Math.min(pts.length - 1, i + 2)];
+    const cp1x = p1[0] + (p2[0] - p0[0]) / 6;
+    const cp1y = p1[1] + (p2[1] - p0[1]) / 6;
+    const cp2x = p2[0] - (p3[0] - p1[0]) / 6;
+    const cp2y = p2[1] - (p3[1] - p1[1]) / 6;
+    d += ` C ${cp1x.toFixed(2)},${cp1y.toFixed(2)} ${cp2x.toFixed(2)},${cp2y.toFixed(2)} ${p2[0]},${p2[1]}`;
+  }
+  return d;
+}
+
+const CHART_SERIES = [
+  { label: 'Risk Score',     stroke: '#1a2133', dotColor: '#252533', data: [63,67,71,70,62,57,53,51,50,48,46,46,44] },
+  { label: 'Revenue',        stroke: '#6717cd', dotColor: '#6717cd', data: [99,99,99,99,97,96,90,87,83,75,70,67,62] },
+  { label: 'Cash Flow',      stroke: '#9a64de', dotColor: '#9a64de', data: [99,95,96,94,85,78,69,63,59,54,48,46,46] },
+  { label: 'Debt-to-EBITDA', stroke: '#b38be6', dotColor: '#b38be6', data: [99,97,92,93,82,75,65,60,52,43,37,32,28] },
+];
+
+const EVENTS = [
+  { idx: 1.2, line1: 'Credit downgrade', line2: 'BBB → BB+' },
+  { idx: 5.3, line1: 'Covenant waiver',  line2: 'DSC breach' },
+  { idx: 8.5, line1: 'Revenue miss',     line2: '−12% YoY'  },
+];
+
+// ── Covenant data ─────────────────────────────────────────────────
+const COVENANTS = [
+  {
+    name: 'Debt Service Coverage',
+    current: '0.30x',  delta: '↓ 0.95 below threshold',
+    required: 'Required: ≥ 1.25x', since: 'Q4 2024', months: '16 months', hasXCircle: true,
+  },
+  {
+    name: 'Current Ratio',
+    current: '1.12',   delta: '↓ 0.38 below threshold',
+    required: 'Required: ≥ 1.50',  since: 'Q3 2025', months: '6 months',  hasXCircle: true,
+  },
+  {
+    name: 'Debt-to-EBITDA',
+    current: '9.55x',  delta: '↑ 6.05 above ceiling (2.7x over limit)',
+    required: 'Required: ≤ 3.50x', since: 'Q2 2025', months: '9 months',  hasXCircle: true,
+  },
+  {
+    name: 'Minimum Liquidity',
+    current: '$2.46M', delta: '↓ $2.54M below minimum',
+    required: 'Required: ≥ $5M',   since: 'Q4 2025', months: '4 months',  hasXCircle: true,
+  },
+];
+
+// ── Review notes data ─────────────────────────────────────────────
+const NOTES = [
+  {
+    avatar: imgCIAvatar1, name: 'Sarah Chen',     role: 'Senior Risk Officer', date: '2/14/2026',
+    text: '"Concerned about Q3 inventory build-up without corresponding sales uptick. Management claims supply chain hedge, but liquidity is tightening significantly."',
+  },
+  {
+    avatar: imgCIAvatar2, name: 'Michael Torres', role: 'Senior Risk Officer', date: '1/27/2026',
+    text: '"Discussed covenant compliance with CFO. All covenants currently met, but monitoring liquidity closely given seasonal patterns. And completed annual review."',
+  },
+];
+
+// ── Documents data ────────────────────────────────────────────────
+const DOCS = [
+  { icon: imgCIDocPdf,  name: '2024 Tax Return.pdf',    meta: '1.2 MB • Verified' },
+  { icon: imgCIDocBank, name: 'Bank Statements_Q3.zip', meta: '4.8 MB • New'      },
+  { icon: imgCIDocLoan, name: 'Loan Agreement.pdf',     meta: '0.5 MB • Signed'   },
+];
+
+function Divider() {
+  return <div style={{ height: 1, background: 'rgba(8,23,50,0.08)', width: '100%' }} />;
+}
+
+// ════════════════════════════════════════════════════════════════
+// Covenant Tracking Card
+// ════════════════════════════════════════════════════════════════
+function BreachBadge() {
+  return (
+    <div style={{
+      background: 'rgba(233,0,11,0.12)', borderRadius: 30, padding: '3px 12px',
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+    }}>
+      <span style={{ ...TEXT, fontSize: 12, fontWeight: 600, color: '#e9000b', lineHeight: '18px' }}>
+        BREACH
+      </span>
+    </div>
+  );
+}
+
+function CovenantCard({ cov }) {
+  const [linkHovered, setLinkHovered] = useState(false);
+  return (
+    <div style={{
+      flex: '1 1 0', minWidth: 0, overflow: 'hidden',
+      background: '#fefdff', border: '1px solid #ffc9c9',
+      borderRadius: 30, padding: '20px 25px',
+      display: 'flex', flexDirection: 'column', gap: 16,
+      boxSizing: 'border-box',
+    }}>
+      {/* Top section */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {/* Row 1: BREACH left, X icon right */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <BreachBadge />
+            <img src={imgXCircleRed} alt="" style={{ width: 16, height: 16, flexShrink: 0 }} />
+          </div>
+          {/* Row 2: Covenant name */}
+          <span style={{ ...TEXT, fontSize: 14, fontWeight: 600, color: '#101828', lineHeight: '18px', marginTop: 10 }}>
+            {cov.name}
+          </span>
+          {/* Current value */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, margin: '6px 0' }}>
+            <span style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#808080', lineHeight: '18px' }}>
+              Current Value
+            </span>
+            <span style={{ ...TEXT, fontSize: 24, fontWeight: 600, color: '#101828', lineHeight: '32px', letterSpacing: '0.72px' }}>
+              {cov.current}
+            </span>
+          </div>
+        </div>
+        {/* Delta + required */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <span style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#7c7c80', lineHeight: '18px' }}>
+            {cov.delta}
+          </span>
+          <span style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#808080', lineHeight: '18px' }}>
+            {cov.required}
+          </span>
+        </div>
+      </div>
+
+      <Divider />
+
+      {/* Footer */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 6 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 0 }}>
+          <span style={{ ...TEXT, fontSize: 14, fontWeight: 600, color: '#a5a5aa', lineHeight: '18px' }}>
+            Breached since: {cov.since}
+          </span>
+          <span style={{ ...TEXT, fontSize: 14, fontWeight: 600, color: '#a5a5aa', lineHeight: '18px' }}>
+            In breach for {cov.months}
+          </span>
+        </div>
+        <img
+          src={imgExtLinkUp} alt=""
+          onMouseEnter={() => setLinkHovered(true)}
+          onMouseLeave={() => setLinkHovered(false)}
+          style={{
+            width: 20, height: 20, objectFit: 'contain', transform: 'rotate(45deg)', flexShrink: 0,
+            filter: linkHovered ? PURPLE_FILTER : BLUE_FILTER,
+            cursor: 'pointer', transition: 'filter 0.2s ease',
+            marginTop: 1,
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function CovenantTrackingCard() {
+  return (
+    <div style={{ borderRadius: 30, padding: '30px 25px', background: CARD_BG, display: 'flex', flexDirection: 'column', gap: 28 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <span style={{ ...TEXT, fontSize: 24, fontWeight: 600, color: '#101828', lineHeight: '32px', letterSpacing: '0.72px' }}>
+          Covenant Tracking
+        </span>
+        <span style={{ ...TEXT, fontSize: 16, fontWeight: 400, color: '#808080', lineHeight: '20px', letterSpacing: '0.07px' }}>
+          4 of 4 covenants in breach — critical attention required
+        </span>
+      </div>
+      <div style={{ display: 'flex', gap: 16 }}>
+        {COVENANTS.map((cov, i) => <CovenantCard key={i} cov={cov} />)}
+      </div>
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════
+// Historical Performance Card
+// ════════════════════════════════════════════════════════════════
+function LegendCheckbox({ color, checked }) {
+  return (
+    <div style={{
+      width: 20, height: 20, flexShrink: 0,
+      background: '#fefdff',
+      border: `2px solid ${color}`,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      borderRadius: 2, cursor: 'pointer',
+    }}>
+      {checked && (
+        <span style={{ fontSize: 11, color: color, lineHeight: 1, fontWeight: 700 }}>✓</span>
+      )}
+    </div>
+  );
+}
+
+function ChartTooltip({ quarter, series, cssX, cssY, wrapperW }) {
+  const TW = 210;
+  const TH = 44 + series.length * 26;
+  const left = Math.max(0, Math.min(cssX - TW / 2, wrapperW - TW));
+  const top  = cssY - TH - 14 > 5 ? cssY - TH - 14 : cssY + 14;
+  return (
+    <div style={{
+      position: 'absolute', left, top, width: TW,
+      background: '#fefdff', borderRadius: 20, padding: '16px 20px',
+      display: 'flex', flexDirection: 'column', gap: 10,
+      boxShadow: '0 4px 16px rgba(0,0,0,0.10)',
+      pointerEvents: 'none', zIndex: 20,
+    }}>
+      <span style={{ ...TEXT, fontSize: 11, fontWeight: 600, color: '#808080', lineHeight: '16px' }}>
+        {quarter}
+      </span>
+      {series.map(({ label, value, color }) => (
+        <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: color, flexShrink: 0 }} />
+          <span style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#364153', flex: 1, lineHeight: '20px', letterSpacing: '-0.15px' }}>
+            {label}
+          </span>
+          <span style={{ ...TEXT, fontSize: 14, fontWeight: 600, color: '#101828', lineHeight: '20px', letterSpacing: '-0.15px' }}>
+            {value}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function HistoricalPerformanceCard() {
+  const allLabels = CHART_SERIES.map(s => s.label);
+  const [visibleSeries, setVisibleSeries] = useState(new Set(allLabels));
+  const [hovered, setHovered] = useState(null);
+  const wrapperRef = useRef(null);
+
+  const toggleSeries = (label) => {
+    setVisibleSeries(prev => {
+      const next = new Set(prev);
+      if (next.has(label)) {
+        if (next.size > 1) next.delete(label);
+      } else {
+        next.add(label);
+      }
+      return next;
+    });
+  };
+
+  const visibleData = CHART_SERIES.filter(s => visibleSeries.has(s.label));
+
+  const handleMouseMove = (e) => {
+    const rect = wrapperRef.current.getBoundingClientRect();
+    const cssX = e.clientX - rect.left;
+    const cssY = e.clientY - rect.top;
+    const svgX  = (cssX / rect.width) * W;
+    let nearest = 0, minDist = Infinity;
+    for (let i = 0; i < N; i++) {
+      const d = Math.abs(svgX - toX(i));
+      if (d < minDist) { minDist = d; nearest = i; }
+    }
+    setHovered({ idx: nearest, cssX, cssY, wrapperW: rect.width });
+  };
+
+  return (
+    <div style={{ borderRadius: 30, padding: '30px 25px', background: CARD_BG, display: 'flex', flexDirection: 'column', gap: 24 }}>
+
+      {/* Header + period toggle */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span style={{ ...TEXT, fontSize: 24, fontWeight: 500, color: '#101828', lineHeight: '32px' }}>
+            Historical Performance
+          </span>
+          <span style={{ ...TEXT, fontSize: 16, fontWeight: 400, color: '#808080', lineHeight: '16px', letterSpacing: '0.07px', paddingBottom: 14 }}>
+            Risk score and key drivers over 12 quarters
+          </span>
+        </div>
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexShrink: 0 }}>
+          <div style={{
+            background: 'linear-gradient(180deg, #6717cd 0%, #2871fa 100%)',
+            borderRadius: 30, padding: '3px 10px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <span style={{ ...TEXT, fontSize: 10, fontWeight: 600, color: '#fff', lineHeight: '16px', minWidth: 28, textAlign: 'center' }}>
+              3Y
+            </span>
+          </div>
+          {['5Y', '10Y'].map(label => (
+            <div key={label} style={{
+              background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.12)',
+              borderRadius: 30, padding: '3px 10px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <span style={{ ...TEXT, fontSize: 10, fontWeight: 600, color: '#b8b8b8', lineHeight: '16px', minWidth: 28, textAlign: 'center' }}>
+                {label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Legend row — margin creates breathing space above and below */}
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center', margin: '10px 0' }}>
+        {CHART_SERIES.map(({ label, dotColor }) => (
+          <div
+            key={label}
+            onClick={() => toggleSeries(label)}
+            style={{ display: 'flex', flex: 1, gap: 8, alignItems: 'center', minWidth: 0, cursor: 'pointer', userSelect: 'none' }}
+          >
+            <LegendCheckbox color={dotColor} checked={visibleSeries.has(label)} />
+            <div style={{
+              width: 16, height: 16, borderRadius: '50%', background: dotColor, flexShrink: 0,
+              opacity: visibleSeries.has(label) ? 1 : 0.25, transition: 'opacity 0.15s ease',
+            }} />
+            <span style={{
+              ...TEXT, fontSize: 16, fontWeight: 400, lineHeight: '16px', letterSpacing: '0.07px', whiteSpace: 'nowrap',
+              color: visibleSeries.has(label) ? '#101828' : '#b0b0b0',
+              transition: 'color 0.15s ease',
+            }}>
+              {label}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* SVG chart with hover */}
+      <div
+        ref={wrapperRef}
+        style={{ position: 'relative', cursor: 'crosshair' }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={() => setHovered(null)}
+      >
+        <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', overflow: 'visible' }}>
+
+          {/* Horizontal grid lines */}
+          {Y_LABELS.map(v => (
+            <line key={v} x1={PAD_L} x2={W - PAD_R} y1={toY(v)} y2={toY(v)}
+              stroke="rgba(165,165,170,0.4)" strokeWidth="0.5" />
+          ))}
+
+          {/* Y-axis labels — dominantBaseline centers text on the grid line */}
+          {Y_LABELS.map(v => (
+            <text key={v} x={PAD_L - 8} y={toY(v)}
+              textAnchor="end" fontSize="12" fill="#101828" fontFamily="Outfit, sans-serif"
+              dominantBaseline="middle">
+              {v}
+            </text>
+          ))}
+
+          {/* Vertical grid lines */}
+          {QUARTERS.map((_, i) => (
+            <line key={i}
+              x1={toX(i)} x2={toX(i)} y1={PAD_T} y2={PAD_T + chartH}
+              stroke="rgba(165,165,170,0.3)" strokeWidth="0.3" />
+          ))}
+
+          {/* Y-axis bar */}
+          <line x1={PAD_L} x2={PAD_L} y1={PAD_T} y2={PAD_T + chartH}
+            stroke="rgba(165,165,170,0.5)" strokeWidth="0.5" />
+
+          {/* X-axis labels */}
+          {QUARTERS.map((q, i) => (
+            <text key={q} x={toX(i)} y={PAD_T + chartH + 20}
+              textAnchor="middle" fontSize="12" fill="#101828" fontFamily="Outfit, sans-serif"
+              dominantBaseline="hanging">
+              {q}
+            </text>
+          ))}
+
+          {/* Chart lines */}
+          {[...visibleData].reverse().map(({ label, data, stroke }) => (
+            <path key={label}
+              d={smoothPath(data.map((v, i) => [toX(i), toY(v)]))}
+              fill="none" stroke={stroke} strokeWidth="2" strokeOpacity="0.85" />
+          ))}
+
+          {/* Data-point dots */}
+          {visibleData.map(({ label, data, dotColor }) =>
+            data.map((v, i) => (
+              <circle key={`${label}-${i}`}
+                cx={toX(i)} cy={toY(v)} r={hovered && hovered.idx === i ? 0 : 4}
+                fill={dotColor} stroke="#fefdff" strokeWidth="1.5" />
+            ))
+          )}
+
+          {/* Hover crosshair */}
+          {hovered && (
+            <line
+              x1={toX(hovered.idx)} x2={toX(hovered.idx)}
+              y1={PAD_T} y2={PAD_T + chartH}
+              stroke="rgba(40,113,250,0.35)" strokeWidth="1" strokeDasharray="4 3"
+            />
+          )}
+
+          {/* Hover highlight dots */}
+          {hovered && visibleData.map(({ label, data, dotColor }) => (
+            <circle key={label}
+              cx={toX(hovered.idx)} cy={toY(data[hovered.idx])} r={6}
+              fill={dotColor} stroke="#fefdff" strokeWidth="2" />
+          ))}
+
+          {/* Event annotations */}
+          {EVENTS.map(({ idx, line1 }) => (
+            <line key={line1}
+              x1={toX(idx)} x2={toX(idx)} y1={PAD_T} y2={PAD_T + chartH}
+              stroke="rgba(165,165,170,0.5)" strokeWidth="0.8" strokeDasharray="3 3" />
+          ))}
+
+          {EVENTS.map(({ idx, line1, line2 }) => {
+            const x = toX(idx);
+            const yBase = PAD_T + chartH + 44;
+            return (
+              <g key={line1}>
+                <polygon points={`${x - 4},${yBase} ${x + 4},${yBase} ${x},${yBase - 7}`} fill="#808080" />
+                <text x={x} y={yBase + 16} textAnchor="middle" fontSize="13" fill="#808080" fontFamily="Outfit, sans-serif">
+                  {line1}
+                </text>
+                <text x={x} y={yBase + 32} textAnchor="middle" fontSize="13" fill="#808080" fontFamily="Outfit, sans-serif">
+                  {line2}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+
+        {/* Tooltip */}
+        {hovered && (
+          <ChartTooltip
+            quarter={QUARTERS[hovered.idx]}
+            series={visibleData.map(s => ({ label: s.label, value: s.data[hovered.idx], color: s.dotColor }))}
+            cssX={hovered.cssX}
+            cssY={hovered.cssY}
+            wrapperW={hovered.wrapperW}
+          />
+        )}
+      </div>
+
+      {/* Thin divider before Summary */}
+      <div style={{ height: '0.3px', background: 'rgba(8,23,50,0.15)', margin: '0 10px' }} />
+
+      {/* Summary */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <span style={{ ...TEXT, fontSize: 16, fontWeight: 700, color: '#808080', lineHeight: '16px' }}>
+          Summary
+        </span>
+        <p style={{ ...TEXT, fontSize: 16, fontWeight: 400, color: '#808080', lineHeight: '23px', letterSpacing: '0.07px', margin: 0 }}>
+          Risk score has declined 24 points over 12 quarters (65 → 41). Primary drivers: cash flow contraction
+          (−58% indexed) and leverage increase (D/EBITDA: 4.2x → 9.55x). Deterioration began Q3 2024 following
+          the credit downgrade and accelerated after the Q2 2025 covenant waiver.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════
+// Latest Review Notes Card
+// ════════════════════════════════════════════════════════════════
+function ReviewNote({ note }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div style={{ background: '#fefdff', borderRadius: 30, padding: '22px 25px' }}>
+      <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+        <img src={note.avatar} alt="" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <span style={{ ...TEXT, fontSize: 20, fontWeight: 400, color: '#101828', lineHeight: '26px', letterSpacing: '0.07px' }}>
+                {note.name}
+              </span>
+              <span style={{ ...TEXT, fontSize: 15, fontWeight: 600, color: '#4a5565', lineHeight: '20px' }}>
+                {note.role}
+              </span>
+            </div>
+            <span style={{ ...TEXT, fontSize: 15, fontWeight: 400, color: '#4a5565', lineHeight: '20px', letterSpacing: '-0.15px', whiteSpace: 'nowrap' }}>
+              {note.date}
+            </span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <span style={{ ...TEXT, fontSize: 16, fontWeight: 400, color: '#364153', lineHeight: '26px' }}>
+              {note.text}
+            </span>
+            <button
+              onMouseEnter={() => setHovered(true)}
+              onMouseLeave={() => setHovered(false)}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer', padding: 0, alignSelf: 'flex-start',
+                ...TEXT, fontSize: 14, fontWeight: 600, lineHeight: '20px',
+                color: hovered ? '#6717cd' : '#2871fa',
+                transition: 'color 0.2s ease',
+              }}
+            >
+              Reply
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ReviewNotesCard() {
+  const [plusHovered, setPlusHovered] = useState(false);
+  return (
+    <div style={{ borderRadius: 30, padding: '30px 25px', background: CARD_BG, display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{ ...TEXT, fontSize: 24, fontWeight: 600, color: '#101828', lineHeight: '32px', letterSpacing: '0.72px' }}>
+          Latest Review Notes
+        </span>
+        <button
+          onMouseEnter={() => setPlusHovered(true)}
+          onMouseLeave={() => setPlusHovered(false)}
+          style={{
+            background: plusHovered
+              ? '#2871fa'
+              : 'linear-gradient(180deg, rgba(40,113,250,0.1) 0%, rgba(103,23,205,0.1) 100%)',
+            borderRadius: '50%', width: 36, height: 36, padding: 0,
+            border: 'none', cursor: 'pointer', flexShrink: 0,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            transition: 'background 0.2s ease',
+          }}
+        >
+          <span style={{
+            ...TEXT, fontSize: 22, fontWeight: 600, lineHeight: '32px',
+            color: plusHovered ? '#fff' : '#101828',
+            transition: 'color 0.2s ease',
+          }}>
+            +
+          </span>
+        </button>
+      </div>
+      {NOTES.map((note, i) => <ReviewNote key={i} note={note} />)}
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════
+// Supporting Documents Card
+// ════════════════════════════════════════════════════════════════
+function DocumentRow({ doc }) {
+  const [dlHovered, setDlHovered] = useState(false);
+  return (
+    <div style={{
+      background: '#fefdff', border: '0.3px solid #14397d',
+      borderRadius: 30, padding: '20px 25px',
+    }}>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <img src={doc.icon} alt="" style={{ width: 28, height: 28, objectFit: 'contain', opacity: 0.75, flexShrink: 0 }} />
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <span style={{ ...TEXT, fontSize: 18, fontWeight: 400, color: '#101828', lineHeight: '22px', letterSpacing: '0.07px' }}>
+            {doc.name}
+          </span>
+          <span style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#364153', lineHeight: '18px' }}>
+            {doc.meta}
+          </span>
+        </div>
+        <img
+          src={imgCIDownload} alt="Download"
+          onMouseEnter={() => setDlHovered(true)}
+          onMouseLeave={() => setDlHovered(false)}
+          style={{
+            width: 22, height: 22, objectFit: 'contain', flexShrink: 0,
+            filter: dlHovered ? PURPLE_FILTER : BLUE_FILTER,
+            cursor: 'pointer', transition: 'filter 0.2s ease',
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function SupportingDocumentsCard() {
+  return (
+    <div style={{ borderRadius: 30, padding: '30px 25px', background: CARD_BG, display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <span style={{ ...TEXT, fontSize: 24, fontWeight: 600, color: '#101828', lineHeight: '32px', letterSpacing: '0.72px' }}>
+        Supporting Documents
+      </span>
+      {DOCS.map((doc, i) => <DocumentRow key={i} doc={doc} />)}
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════
+// Main export
+// ════════════════════════════════════════════════════════════════
+export default function ContextualInsightsTab() {
+  return (
+    <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
+      {/* Left column — grows to fill ~70% */}
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <CovenantTrackingCard />
+        <HistoricalPerformanceCard />
+      </div>
+      {/* Right column — fixed at 30% */}
+      <div style={{ flex: '0 0 calc(30% - 24px)', display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <ReviewNotesCard />
+        <SupportingDocumentsCard />
+      </div>
+    </div>
+  );
+}

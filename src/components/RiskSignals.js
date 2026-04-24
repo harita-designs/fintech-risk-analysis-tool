@@ -64,7 +64,7 @@ export default function RiskSignals({ signals, totalCount }) {
             background: 'rgba(233,0,11,0.1)', borderRadius: 10, padding: '5px 10px',
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           }}>
-            <span style={{ fontSize: 14, fontWeight: 400, color: '#bb0009', letterSpacing: '-0.15px' }}>
+            <span style={{ fontSize: 14, fontWeight: 700, color: '#e9000b', letterSpacing: '-0.15px' }}>
               {totalCount}
             </span>
           </div>
@@ -84,11 +84,10 @@ export default function RiskSignals({ signals, totalCount }) {
         onMouseEnter={() => setViewAllHovered(true)}
         onMouseLeave={() => setViewAllHovered(false)}
         style={{
-          fontSize: 14, fontWeight: 400,
-          color: viewAllHovered ? '#2871fa' : '#081732',
+          fontSize: 14, fontWeight: 600,
+          color: viewAllHovered ? '#6717cd' : '#2871fa',
           lineHeight: '20px', letterSpacing: '-0.15px',
           cursor: 'pointer',
-          textDecoration: viewAllHovered ? 'underline' : 'none',
           transition: 'color 0.15s',
         }}
       >

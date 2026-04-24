@@ -4,7 +4,7 @@ import PortfolioOverview from './screens/PortfolioOverview';
 import RiskAnalysisWorkspace from './screens/RiskAnalysisWorkspace';
 
 export default function App() {
-  const [screen, setScreen]       = useState('portfolio');
+  const [screen, setScreen] = useState('portfolio');
   const [selectedBorrower, setSelectedBorrower] = useState(null);
 
   const handleSelectBorrower = (borrower) => {

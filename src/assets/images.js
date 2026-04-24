@@ -63,3 +63,15 @@ export const imgDotRevenue  = "https://www.figma.com/api/mcp/asset/74e0fd3d-10d7
 export const imgDotCashFlow = "https://www.figma.com/api/mcp/asset/3525f50a-1e3e-4430-ac71-b1975d922c0a";
 export const imgDotDebt     = "https://www.figma.com/api/mcp/asset/cfd35aff-e9cf-45eb-b4b7-9828b4370711";
 export const imgDotDark     = "https://www.figma.com/api/mcp/asset/69e336ab-6e26-4a3a-ad5e-20e639702207";
+
+// Screen 2.3 — Risk Signals tab
+export const imgXCircleRed  = "https://www.figma.com/api/mcp/asset/3ab87909-2514-4f98-b8e1-f03c86db414f";
+export const imgExtLinkUp   = "https://www.figma.com/api/mcp/asset/18eef0f5-a93b-458a-a793-2bbe1f814034";
+
+// Screen 2.4 — Contextual Insights tab
+export const imgCIAvatar1  = "https://www.figma.com/api/mcp/asset/af9ffbdc-0aad-4563-80b8-1e82cc38da02";
+export const imgCIAvatar2  = "https://www.figma.com/api/mcp/asset/6f67765a-204c-4043-b9d2-4fbed615d17e";
+export const imgCIDocPdf   = "https://www.figma.com/api/mcp/asset/f59ebda2-5364-4fca-a5f0-72aae6df06ad";
+export const imgCIDocBank  = "https://www.figma.com/api/mcp/asset/f7ddec6d-ceca-475d-bd9e-cd5900430e9e";
+export const imgCIDocLoan  = "https://www.figma.com/api/mcp/asset/d6f6037e-cb83-4eb3-8746-067456726eff";
+export const imgCIDownload = "https://www.figma.com/api/mcp/asset/06b1d27a-c5dc-49b7-b52f-4b4c4aa771e1";
