@@ -1,20 +1,55 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 function FooterLink({ label }) {
   const [hovered, setHovered] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!showTooltip) return;
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setShowTooltip(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showTooltip]);
+
   return (
-    <span
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        cursor: 'pointer', fontSize: 14, fontWeight: 400, color: hovered ? '#2871fa' : '#081732',
-        letterSpacing: '-0.15px', lineHeight: '20px',
-        textDecoration: hovered ? 'underline' : 'none',
-        transition: 'color 0.15s',
-      }}
-    >
-      {label}
-    </span>
+    <div ref={ref} style={{ position: 'relative' }}>
+      <span
+        onClick={() => setShowTooltip(s => !s)}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          cursor: 'pointer', fontSize: 14, fontWeight: 400,
+          color: hovered || showTooltip ? '#2871fa' : '#081732',
+          letterSpacing: '-0.15px', lineHeight: '20px',
+          textDecoration: hovered ? 'underline' : 'none',
+          transition: 'color 0.15s',
+        }}
+      >
+        {label}
+      </span>
+      {showTooltip && (
+        <div style={{
+          position: 'absolute',
+          bottom: 'calc(100% + 8px)',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: '#fefdff',
+          border: '0.5px solid #e1d1f5',
+          borderRadius: 12,
+          padding: '10px 18px',
+          boxShadow: '0 4px 24px rgba(20,57,125,0.14)',
+          fontSize: 13, fontWeight: 500, color: '#081732',
+          whiteSpace: 'nowrap', zIndex: 500,
+          fontFamily: 'Outfit, sans-serif', letterSpacing: '0.07px',
+          pointerEvents: 'none',
+        }}>
+          Feature coming soon
+        </div>
+      )}
+    </div>
   );
 }
 

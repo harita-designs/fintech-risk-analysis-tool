@@ -16,7 +16,6 @@ function SignalItem({ signal }) {
       <img src={icon} alt="" style={{ width: 16, height: 16, objectFit: 'contain', flexShrink: 0, marginTop: 2 }} />
 
       <div style={{ flex: 1, minWidth: 0 }}>
-        {/* Title row */}
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10,
           fontFamily: 'Outfit, sans-serif', fontWeight: 400, lineHeight: '16px',
@@ -34,7 +33,6 @@ function SignalItem({ signal }) {
             </span>
           </div>
         </div>
-        {/* Description */}
         <p style={{ fontSize: 14, fontWeight: 400, color: '#081732', lineHeight: '20px', letterSpacing: '-0.15px', margin: 0 }}>
           {signal.desc}
         </p>
@@ -44,8 +42,11 @@ function SignalItem({ signal }) {
 }
 
 export default function RiskSignals({ signals, totalCount }) {
-  const [viewAllHovered, setViewAllHovered] = useState(false);
-  const visible = signals.slice(0, 3);
+  const [showAll, setShowAll] = useState(false);
+  const [toggleHovered, setToggleHovered] = useState(false);
+
+  const visible = showAll ? signals : signals.slice(0, 3);
+  const hasMore = signals.length > 3;
 
   return (
     <div style={{
@@ -72,27 +73,42 @@ export default function RiskSignals({ signals, totalCount }) {
       </div>
 
       {/* Signal items */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
-        {visible.map(signal => (
-          <SignalItem key={signal.id} signal={signal} />
-        ))}
-      </div>
+      {visible.length > 0 ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
+          {visible.map(signal => (
+            <SignalItem key={signal.id} signal={signal} />
+          ))}
+        </div>
+      ) : (
+        <div style={{
+          background: '#fefdff', borderRadius: 20, padding: '24px',
+          border: '0.5px solid rgba(20,57,125,0.15)',
+          textAlign: 'center',
+          fontSize: 14, color: 'rgba(8,23,50,0.45)', letterSpacing: '-0.15px',
+        }}>
+          No active risk signals
+        </div>
+      )}
 
-      {/* View all */}
-      <span
-        onClick={() => {}}
-        onMouseEnter={() => setViewAllHovered(true)}
-        onMouseLeave={() => setViewAllHovered(false)}
-        style={{
-          fontSize: 14, fontWeight: 600,
-          color: viewAllHovered ? '#6717cd' : '#2871fa',
-          lineHeight: '20px', letterSpacing: '-0.15px',
-          cursor: 'pointer',
-          transition: 'color 0.15s',
-        }}
-      >
-        View all {totalCount} signals  →
-      </span>
+      {/* View all / Show less toggle */}
+      {hasMore && (
+        <span
+          onClick={() => setShowAll(s => !s)}
+          onMouseEnter={() => setToggleHovered(true)}
+          onMouseLeave={() => setToggleHovered(false)}
+          style={{
+            fontSize: 14, fontWeight: 600,
+            color: toggleHovered ? '#6717cd' : '#2871fa',
+            lineHeight: '20px', letterSpacing: '-0.15px',
+            cursor: 'pointer',
+            transition: 'color 0.15s',
+          }}
+        >
+          {showAll
+            ? '↑ Show less'
+            : `View all ${totalCount} signal${totalCount === 1 ? '' : 's'} →`}
+        </span>
+      )}
     </div>
   );
 }

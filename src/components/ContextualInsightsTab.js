@@ -1,8 +1,9 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   imgExtLinkUp, imgXCircleRed,
   imgCIAvatar1, imgCIAvatar2,
   imgCIDocPdf, imgCIDocBank, imgCIDocLoan, imgCIDownload,
+  imgProfile,
 } from '../assets/images';
 
 const TEXT          = { fontFamily: 'Outfit, sans-serif' };
@@ -85,12 +86,14 @@ const COVENANTS = [
 // ── Review notes data ─────────────────────────────────────────────
 const NOTES = [
   {
-    avatar: imgCIAvatar1, name: 'Sarah Chen',     role: 'Senior Risk Officer', date: '2/14/2026',
+    id: 1, avatar: imgCIAvatar1, name: 'Sarah Chen', role: 'Senior Risk Officer', date: '2/14/2026',
     text: '"Concerned about Q3 inventory build-up without corresponding sales uptick. Management claims supply chain hedge, but liquidity is tightening significantly."',
+    isUserNote: false,
   },
   {
-    avatar: imgCIAvatar2, name: 'Michael Torres', role: 'Senior Risk Officer', date: '1/27/2026',
+    id: 2, avatar: imgCIAvatar2, name: 'Michael Torres', role: 'Senior Risk Officer', date: '1/27/2026',
     text: '"Discussed covenant compliance with CFO. All covenants currently met, but monitoring liquidity closely given seasonal patterns. And completed annual review."',
+    isUserNote: false,
   },
 ];
 
@@ -111,8 +114,9 @@ function Divider() {
 function BreachBadge() {
   return (
     <div style={{
-      background: 'rgba(233,0,11,0.12)', borderRadius: 30, padding: '3px 12px',
+      background: 'rgba(233,0,11,0.1)', borderRadius: 30, padding: '3px 12px',
       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+      alignSelf: 'flex-start',
     }}>
       <span style={{ ...TEXT, fontSize: 12, fontWeight: 600, color: '#e9000b', lineHeight: '18px' }}>
         BREACH
@@ -126,7 +130,7 @@ function CovenantCard({ cov }) {
   return (
     <div style={{
       flex: '1 1 0', minWidth: 0, overflow: 'hidden',
-      background: '#fefdff', border: '1px solid #ffc9c9',
+      background: '#fefdff', border: '1px solid rgba(8,23,50,0.12)',
       borderRadius: 30, padding: '20px 25px',
       display: 'flex', flexDirection: 'column', gap: 16,
       boxSizing: 'border-box',
@@ -134,11 +138,8 @@ function CovenantCard({ cov }) {
       {/* Top section */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {/* Row 1: BREACH left, X icon right */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <BreachBadge />
-            <img src={imgXCircleRed} alt="" style={{ width: 16, height: 16, flexShrink: 0 }} />
-          </div>
+          {/* Row 1: BREACH badge only */}
+          <BreachBadge />
           {/* Row 2: Covenant name */}
           <span style={{ ...TEXT, fontSize: 14, fontWeight: 600, color: '#101828', lineHeight: '18px', marginTop: 10 }}>
             {cov.name}
@@ -155,9 +156,13 @@ function CovenantCard({ cov }) {
         </div>
         {/* Delta + required */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          <span style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#7c7c80', lineHeight: '18px' }}>
-            {cov.delta}
-          </span>
+          {/* X icon + 8px gap + delta text on same row */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <img src={imgXCircleRed} alt="" style={{ width: 14, height: 14, flexShrink: 0 }} />
+            <span style={{ ...TEXT, fontSize: 14, fontWeight: 700, color: '#6b7280', lineHeight: '18px' }}>
+              {cov.delta}
+            </span>
+          </div>
           <span style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#808080', lineHeight: '18px' }}>
             {cov.required}
           </span>
@@ -487,8 +492,67 @@ function HistoricalPerformanceCard() {
 // ════════════════════════════════════════════════════════════════
 // Latest Review Notes Card
 // ════════════════════════════════════════════════════════════════
-function ReviewNote({ note }) {
-  const [hovered, setHovered] = useState(false);
+function NoteEditPanel({ initialText, onSave, onCancel }) {
+  const [text, setText] = useState(initialText);
+  const [saveHovered, setSaveHovered] = useState(false);
+  const [cancelHovered, setCancelHovered] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => { if (ref.current) ref.current.focus(); }, []);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <textarea
+        ref={ref}
+        value={text}
+        onChange={e => setText(e.target.value)}
+        onFocus={e => e.target.style.borderColor = '#2871fa'}
+        onBlur={e => e.target.style.borderColor = '#e1d1f5'}
+        style={{
+          width: '100%', minHeight: 88,
+          border: '0.5px solid #e1d1f5', borderRadius: 12, padding: '12px 14px',
+          fontFamily: 'Outfit, sans-serif', fontSize: 14, fontWeight: 400,
+          color: '#101828', lineHeight: '22px', resize: 'vertical',
+          outline: 'none', background: '#fefdff', boxSizing: 'border-box',
+          transition: 'border-color 0.15s',
+        }}
+      />
+      <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+        <button
+          onClick={onCancel}
+          onMouseEnter={() => setCancelHovered(true)}
+          onMouseLeave={() => setCancelHovered(false)}
+          style={{
+            ...TEXT, padding: '7px 16px',
+            background: cancelHovered ? 'rgba(8,23,50,0.06)' : 'transparent',
+            border: '0.5px solid #e1d1f5', borderRadius: 30, cursor: 'pointer',
+            fontSize: 13, fontWeight: 600, color: '#4a5565', transition: 'background 0.15s',
+          }}
+        >Cancel</button>
+        <button
+          onClick={() => text.trim() && onSave(text.trim())}
+          onMouseEnter={() => setSaveHovered(true)}
+          onMouseLeave={() => setSaveHovered(false)}
+          style={{
+            ...TEXT, padding: '7px 16px',
+            background: saveHovered ? '#1a60e8' : '#2871fa',
+            border: 'none', borderRadius: 30, cursor: 'pointer',
+            fontSize: 13, fontWeight: 600, color: '#fefdff',
+            transition: 'background 0.15s',
+            opacity: text.trim() ? 1 : 0.5,
+          }}
+        >Save</button>
+      </div>
+    </div>
+  );
+}
+
+function ReviewNote({ note, onEdit, onDelete }) {
+  const [replyHovered, setReplyHovered] = useState(false);
+  const [editHovered, setEditHovered] = useState(false);
+  const [deleteHovered, setDeleteHovered] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const rawText = note.text.replace(/^"|"$/g, '');
+
   return (
     <div style={{ background: '#fefdff', borderRadius: 30, padding: '22px 25px' }}>
       <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
@@ -507,23 +571,58 @@ function ReviewNote({ note }) {
               {note.date}
             </span>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <span style={{ ...TEXT, fontSize: 16, fontWeight: 400, color: '#364153', lineHeight: '26px' }}>
-              {note.text}
-            </span>
-            <button
-              onMouseEnter={() => setHovered(true)}
-              onMouseLeave={() => setHovered(false)}
-              style={{
-                background: 'none', border: 'none', cursor: 'pointer', padding: 0, alignSelf: 'flex-start',
-                ...TEXT, fontSize: 14, fontWeight: 600, lineHeight: '20px',
-                color: hovered ? '#6717cd' : '#2871fa',
-                transition: 'color 0.2s ease',
-              }}
-            >
-              Reply
-            </button>
-          </div>
+
+          {isEditing ? (
+            <NoteEditPanel
+              initialText={rawText}
+              onSave={(newText) => { onEdit(note.id, newText); setIsEditing(false); }}
+              onCancel={() => setIsEditing(false)}
+            />
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <span style={{ ...TEXT, fontSize: 16, fontWeight: 400, color: '#364153', lineHeight: '26px' }}>
+                {note.text}
+              </span>
+              {note.isUserNote ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    onMouseEnter={() => setEditHovered(true)}
+                    onMouseLeave={() => setEditHovered(false)}
+                    style={{
+                      background: 'none', border: 'none', cursor: 'pointer', padding: '2px 6px',
+                      ...TEXT, fontSize: 14, fontWeight: 600, lineHeight: '20px',
+                      color: editHovered ? '#1a60e8' : '#2871fa',
+                      transition: 'color 0.15s',
+                    }}
+                  >Edit</button>
+                  <span style={{ color: '#e1d1f5', fontSize: 14 }}>|</span>
+                  <button
+                    onClick={() => onDelete(note.id)}
+                    onMouseEnter={() => setDeleteHovered(true)}
+                    onMouseLeave={() => setDeleteHovered(false)}
+                    style={{
+                      background: 'none', border: 'none', cursor: 'pointer', padding: '2px 6px',
+                      ...TEXT, fontSize: 14, fontWeight: 600, lineHeight: '20px',
+                      color: deleteHovered ? '#b00008' : '#e9000b',
+                      transition: 'color 0.15s',
+                    }}
+                  >Delete</button>
+                </div>
+              ) : (
+                <button
+                  onMouseEnter={() => setReplyHovered(true)}
+                  onMouseLeave={() => setReplyHovered(false)}
+                  style={{
+                    background: 'none', border: 'none', cursor: 'pointer', padding: 0, alignSelf: 'flex-start',
+                    ...TEXT, fontSize: 14, fontWeight: 600, lineHeight: '20px',
+                    color: replyHovered ? '#6717cd' : '#2871fa',
+                    transition: 'color 0.2s ease',
+                  }}
+                >Reply</button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -532,17 +631,63 @@ function ReviewNote({ note }) {
 
 function ReviewNotesCard() {
   const [plusHovered, setPlusHovered] = useState(false);
+  const [addHovered, setAddHovered] = useState(false);
+  const [cancelHovered, setCancelHovered] = useState(false);
+  const [showInput, setShowInput] = useState(false);
+  const [noteText, setNoteText] = useState('');
+  const [notes, setNotes] = useState(NOTES);
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    if (showInput && textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [showInput]);
+
+  const handleAdd = () => {
+    if (!noteText.trim()) return;
+    const d = new Date();
+    const dateStr = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+    setNotes(prev => [{
+      id: Date.now(),
+      avatar: imgProfile,
+      name: 'Adam Johnson',
+      role: 'Senior Risk Analyst',
+      date: dateStr,
+      text: `"${noteText.trim()}"`,
+      isUserNote: true,
+    }, ...prev]);
+    setNoteText('');
+    setShowInput(false);
+  };
+
+  const handleEdit = (id, newText) => {
+    setNotes(prev => prev.map(n => n.id === id ? { ...n, text: `"${newText}"` } : n));
+  };
+
+  const handleDelete = (id) => {
+    setNotes(prev => prev.filter(n => n.id !== id));
+  };
+
+  const handleCancel = () => {
+    setNoteText('');
+    setShowInput(false);
+  };
+
   return (
     <div style={{ borderRadius: 30, padding: '30px 25px', background: CARD_BG, display: 'flex', flexDirection: 'column', gap: 20 }}>
+
+      {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <span style={{ ...TEXT, fontSize: 24, fontWeight: 600, color: '#101828', lineHeight: '32px', letterSpacing: '0.72px' }}>
           Latest Review Notes
         </span>
         <button
+          onClick={() => setShowInput(s => !s)}
           onMouseEnter={() => setPlusHovered(true)}
           onMouseLeave={() => setPlusHovered(false)}
           style={{
-            background: plusHovered
+            background: showInput || plusHovered
               ? '#2871fa'
               : 'linear-gradient(180deg, rgba(40,113,250,0.1) 0%, rgba(103,23,205,0.1) 100%)',
             borderRadius: '50%', width: 36, height: 36, padding: 0,
@@ -552,15 +697,108 @@ function ReviewNotesCard() {
           }}
         >
           <span style={{
-            ...TEXT, fontSize: 22, fontWeight: 600, lineHeight: '32px',
-            color: plusHovered ? '#fff' : '#101828',
-            transition: 'color 0.2s ease',
+            ...TEXT, fontSize: showInput ? 26 : 22, fontWeight: 600, lineHeight: '32px',
+            color: showInput || plusHovered ? '#fff' : '#101828',
+            transition: 'color 0.2s ease, font-size 0.15s ease',
+            transform: showInput ? 'rotate(45deg)' : 'none',
+            display: 'inline-block',
+            transition: 'all 0.2s ease',
           }}>
             +
           </span>
         </button>
       </div>
-      {NOTES.map((note, i) => <ReviewNote key={i} note={note} />)}
+
+      {/* Input panel */}
+      {showInput && (
+        <div style={{
+          background: '#fefdff',
+          border: '0.5px solid #e1d1f5',
+          borderRadius: 20,
+          padding: '20px',
+          display: 'flex', flexDirection: 'column', gap: 16,
+          boxShadow: '0 2px 12px rgba(20,57,125,0.08)',
+        }}>
+          {/* Author row */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <img
+              src={imgProfile} alt=""
+              style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '1px solid #e1d1f5' }}
+            />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <span style={{ ...TEXT, fontSize: 15, fontWeight: 600, color: '#101828', lineHeight: '20px' }}>
+                Adam Johnson
+              </span>
+              <span style={{ ...TEXT, fontSize: 12, fontWeight: 400, color: '#808080', lineHeight: '16px' }}>
+                Senior Risk Analyst
+              </span>
+            </div>
+          </div>
+
+          {/* Textarea */}
+          <textarea
+            ref={textareaRef}
+            value={noteText}
+            onChange={e => setNoteText(e.target.value)}
+            placeholder="Write your review note..."
+            onFocus={e => e.target.style.borderColor = '#2871fa'}
+            onBlur={e => e.target.style.borderColor = '#e1d1f5'}
+            style={{
+              width: '100%', minHeight: 96,
+              border: '0.5px solid #e1d1f5',
+              borderRadius: 12, padding: '12px 14px',
+              fontFamily: 'Outfit, sans-serif', fontSize: 14,
+              fontWeight: 400, color: '#101828', lineHeight: '22px',
+              resize: 'vertical', outline: 'none',
+              background: '#fefdff',
+              boxSizing: 'border-box',
+              transition: 'border-color 0.15s',
+            }}
+          />
+
+          {/* Action buttons */}
+          <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+            <button
+              onClick={handleCancel}
+              onMouseEnter={() => setCancelHovered(true)}
+              onMouseLeave={() => setCancelHovered(false)}
+              style={{
+                ...TEXT, padding: '8px 18px',
+                background: cancelHovered ? 'rgba(8,23,50,0.06)' : 'transparent',
+                border: '0.5px solid #e1d1f5',
+                borderRadius: 30, cursor: 'pointer',
+                fontSize: 13, fontWeight: 600,
+                color: '#4a5565',
+                transition: 'background 0.15s',
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleAdd}
+              onMouseEnter={() => setAddHovered(true)}
+              onMouseLeave={() => setAddHovered(false)}
+              style={{
+                ...TEXT, padding: '8px 18px',
+                background: addHovered ? '#1a60e8' : '#2871fa',
+                border: 'none',
+                borderRadius: 30, cursor: 'pointer',
+                fontSize: 13, fontWeight: 600,
+                color: '#fefdff',
+                transition: 'background 0.15s',
+                opacity: noteText.trim() ? 1 : 0.5,
+              }}
+            >
+              Add Note
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Notes list */}
+      {notes.map(note => (
+        <ReviewNote key={note.id} note={note} onEdit={handleEdit} onDelete={handleDelete} />
+      ))}
     </div>
   );
 }
@@ -568,13 +806,30 @@ function ReviewNotesCard() {
 // ════════════════════════════════════════════════════════════════
 // Supporting Documents Card
 // ════════════════════════════════════════════════════════════════
-function DocumentRow({ doc }) {
+function DocumentRow({ doc, showTooltip, onToggle }) {
   const [dlHovered, setDlHovered] = useState(false);
+  const rowRef = useRef(null);
+
+  useEffect(() => {
+    if (!showTooltip) return;
+    const handler = (e) => {
+      if (rowRef.current && !rowRef.current.contains(e.target)) onToggle();
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showTooltip, onToggle]);
+
   return (
-    <div style={{
-      background: '#fefdff', border: '0.3px solid #14397d',
-      borderRadius: 30, padding: '20px 25px',
-    }}>
+    <div ref={rowRef} style={{ position: 'relative' }}>
+      <div
+        onClick={onToggle}
+        style={{
+          background: '#fefdff',
+          border: '0.3px solid #14397d',
+          borderRadius: 30, padding: '20px 25px',
+          cursor: 'pointer',
+        }}
+      >
       <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
         <img src={doc.icon} alt="" style={{ width: 28, height: 28, objectFit: 'contain', opacity: 0.75, flexShrink: 0 }} />
         <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -596,17 +851,45 @@ function DocumentRow({ doc }) {
           }}
         />
       </div>
+      </div>
+      {showTooltip && (
+        <div style={{
+          position: 'absolute',
+          bottom: 'calc(100% + 8px)',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: '#fefdff',
+          border: '0.5px solid #e1d1f5',
+          borderRadius: 12,
+          padding: '10px 18px',
+          boxShadow: '0 4px 24px rgba(20,57,125,0.14)',
+          fontSize: 13, fontWeight: 500, color: '#081732',
+          whiteSpace: 'nowrap', zIndex: 500,
+          fontFamily: 'Outfit, sans-serif', letterSpacing: '0.07px',
+          pointerEvents: 'none',
+        }}>
+          Feature coming soon
+        </div>
+      )}
     </div>
   );
 }
 
 function SupportingDocumentsCard() {
+  const [openIdx, setOpenIdx] = useState(null);
   return (
     <div style={{ borderRadius: 30, padding: '30px 25px', background: CARD_BG, display: 'flex', flexDirection: 'column', gap: 20 }}>
       <span style={{ ...TEXT, fontSize: 24, fontWeight: 600, color: '#101828', lineHeight: '32px', letterSpacing: '0.72px' }}>
         Supporting Documents
       </span>
-      {DOCS.map((doc, i) => <DocumentRow key={i} doc={doc} />)}
+      {DOCS.map((doc, i) => (
+        <DocumentRow
+          key={i}
+          doc={doc}
+          showTooltip={openIdx === i}
+          onToggle={() => setOpenIdx(openIdx === i ? null : i)}
+        />
+      ))}
     </div>
   );
 }
