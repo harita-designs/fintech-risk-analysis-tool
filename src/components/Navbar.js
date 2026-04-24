@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import {
   imgSearch, imgBarChart, imgComments, imgSettings,
-  imgNotification, imgNotifyBg, imgProfile,
+  imgNotification, imgProfile,
 } from '../assets/images';
 import { borrowers } from '../data/borrowers';
 

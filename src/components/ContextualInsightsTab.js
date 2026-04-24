@@ -699,7 +699,6 @@ function ReviewNotesCard() {
           <span style={{
             ...TEXT, fontSize: showInput ? 26 : 22, fontWeight: 600, lineHeight: '32px',
             color: showInput || plusHovered ? '#fff' : '#101828',
-            transition: 'color 0.2s ease, font-size 0.15s ease',
             transform: showInput ? 'rotate(45deg)' : 'none',
             display: 'inline-block',
             transition: 'all 0.2s ease',

@@ -43,7 +43,7 @@ const TOOLTIP_H = 100;
 export default function FinancialChart({ data }) {
   const wrapperRef = useRef(null);
   const [tooltip, setTooltip] = useState(null); // { q, cssX, cssY }
-  const { quarters = QUARTERS, revenue, cashFlow, debt } = data;
+  const { revenue, cashFlow, debt } = data;
   const seriesData = { revenue, cashFlow, debt };
 
   const handleMouseMove = (e) => {
