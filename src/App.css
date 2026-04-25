@@ -29,3 +29,7 @@ html {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* Hide scrollbar on tab nav for mobile */
+.tab-scroll::-webkit-scrollbar { display: none; }
+.tab-scroll { -ms-overflow-style: none; scrollbar-width: none; }

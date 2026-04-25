@@ -11,17 +11,21 @@ import FinancialPerformanceTab from '../components/FinancialPerformanceTab';
 import RiskSignalsTab from '../components/RiskSignalsTab';
 import ContextualInsightsTab from '../components/ContextualInsightsTab';
 import { borrowerDetailData, techCorpFinancials, techCorpRiskProfile, techCorpSignals } from '../data/borrowers';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const FALLBACK = { financials: techCorpFinancials, riskProfile: techCorpRiskProfile, signals: techCorpSignals };
 
 function OverviewTab({ financials, riskProfile, signals }) {
+  const { isMobile, isTablet } = useBreakpoint();
+  const isStacked = isMobile || isTablet;
+
   return (
-    <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
+    <div style={{ display: 'flex', flexDirection: isStacked ? 'column' : 'row', gap: 20, alignItems: 'flex-start' }}>
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 25 }}>
         <FinancialChart data={financials} />
         <RiskProfileChart metrics={riskProfile} />
       </div>
-      <div style={{ flex: '0 0 515px' }}>
+      <div style={{ flex: isStacked ? 'none' : '0 0 515px', width: isStacked ? '100%' : undefined }}>
         <RiskSignals signals={signals} totalCount={signals.length} />
       </div>
     </div>
@@ -66,6 +70,7 @@ function ComingSoonTab() {
 
 export default function RiskAnalysisWorkspace({ borrower, onBack }) {
   const [activeTab, setActiveTab] = useState('Overview');
+  const { isMobile } = useBreakpoint();
 
   const isTechCorp = borrower?.id === 'BRW-001';
   const detail = borrowerDetailData[borrower?.id] || FALLBACK;
@@ -85,14 +90,14 @@ export default function RiskAnalysisWorkspace({ borrower, onBack }) {
     <div style={{ minHeight: '100vh', background: '#fefdff', display: 'flex', flexDirection: 'column' }}>
       <Navbar onBack={onBack} />
 
-      <div style={{ flex: 1, background: '#fefdff', padding: '0 10px' }}>
+      <div style={{ flex: 1, background: '#fefdff', padding: isMobile ? '0 8px' : '0 10px' }}>
         <div style={{
-          display: 'flex', flexDirection: 'column', gap: 25,
-          padding: '30px 0',
+          display: 'flex', flexDirection: 'column', gap: isMobile ? 16 : 25,
+          padding: isMobile ? '16px 0' : '30px 0',
         }}>
           <BorrowerHeader borrower={borrower} onBack={onBack} />
 
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', padding: isMobile ? '0 4px' : 0 }}>
             <TabNav activeTab={activeTab} onTabChange={setActiveTab} />
           </div>
 

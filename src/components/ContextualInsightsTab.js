@@ -1,5 +1,5 @@
-// test change
 import { useState, useRef, useEffect } from 'react';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 import {
   imgExtLinkUp, imgXCircleRed,
   imgCIAvatar1, imgCIAvatar2,
@@ -126,11 +126,11 @@ function BreachBadge() {
   );
 }
 
-function CovenantCard({ cov }) {
+function CovenantCard({ cov, cardFlex }) {
   const [linkHovered, setLinkHovered] = useState(false);
   return (
     <div style={{
-      flex: '1 1 0', minWidth: 0, overflow: 'hidden',
+      flex: cardFlex || '1 1 0', minWidth: 0, overflow: 'hidden',
       background: '#fefdff', border: '1px solid rgba(8,23,50,0.12)',
       borderRadius: 30, padding: '20px 25px',
       display: 'flex', flexDirection: 'column', gap: 16,
@@ -199,6 +199,8 @@ function CovenantCard({ cov }) {
 }
 
 function CovenantTrackingCard() {
+  const { isMobile, isTablet } = useBreakpoint();
+  const cardFlex = isMobile ? '0 0 100%' : isTablet ? '0 0 calc(50% - 8px)' : '1 1 0';
   return (
     <div style={{ borderRadius: 30, padding: '30px 25px', background: CARD_BG, display: 'flex', flexDirection: 'column', gap: 28 }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -209,8 +211,8 @@ function CovenantTrackingCard() {
           4 of 4 covenants in breach — critical attention required
         </span>
       </div>
-      <div style={{ display: 'flex', gap: 16 }}>
-        {COVENANTS.map((cov, i) => <CovenantCard key={i} cov={cov} />)}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+        {COVENANTS.map((cov, i) => <CovenantCard key={i} cov={cov} cardFlex={cardFlex} />)}
       </div>
     </div>
   );
@@ -336,13 +338,13 @@ function HistoricalPerformanceCard() {
         </div>
       </div>
 
-      {/* Legend row — margin creates breathing space above and below */}
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center', margin: '10px 0' }}>
+      {/* Legend row */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', margin: '10px 0' }}>
         {CHART_SERIES.map(({ label, dotColor }) => (
           <div
             key={label}
             onClick={() => toggleSeries(label)}
-            style={{ display: 'flex', flex: 1, gap: 8, alignItems: 'center', minWidth: 0, cursor: 'pointer', userSelect: 'none' }}
+            style={{ display: 'flex', gap: 8, alignItems: 'center', minWidth: 0, cursor: 'pointer', userSelect: 'none', flex: '1 0 auto' }}
           >
             <LegendCheckbox color={dotColor} checked={visibleSeries.has(label)} />
             <div style={{
@@ -898,15 +900,22 @@ function SupportingDocumentsCard() {
 // Main export
 // ════════════════════════════════════════════════════════════════
 export default function ContextualInsightsTab() {
+  const { isMobile, isTablet } = useBreakpoint();
+  const isStacked = isMobile || isTablet;
+
   return (
-    <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
-      {/* Left column — grows to fill ~70% */}
+    <div style={{ display: 'flex', flexDirection: isStacked ? 'column' : 'row', gap: 20, alignItems: 'flex-start' }}>
+      {/* Left column */}
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 20 }}>
         <CovenantTrackingCard />
         <HistoricalPerformanceCard />
       </div>
-      {/* Right column — fixed at 30% */}
-      <div style={{ flex: '0 0 calc(30% - 24px)', display: 'flex', flexDirection: 'column', gap: 20 }}>
+      {/* Right column */}
+      <div style={{
+        flex: isStacked ? 'none' : '0 0 calc(30% - 10px)',
+        width: isStacked ? '100%' : undefined,
+        display: 'flex', flexDirection: 'column', gap: 20,
+      }}>
         <ReviewNotesCard />
         <SupportingDocumentsCard />
       </div>

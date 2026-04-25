@@ -1,4 +1,5 @@
 import { imgRevenueIcon, imgCashFlowIcon, imgDebtIcon, imgLiquidityIcon } from '../assets/images';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const GRADIENT = 'linear-gradient(116.96deg, rgba(40,113,250,0.05) 50.33%, rgba(103,23,205,0.05) 95.81%)';
 
@@ -17,10 +18,11 @@ function TrendBadge({ value, arrowUp, danger }) {
   );
 }
 
-function MetricCard({ icon, label, value, trend, arrowUp, danger }) {
+function MetricCard({ icon, label, value, trend, arrowUp, danger, cardFlex }) {
   return (
     <div style={{
-      flex: '1 0 0', minWidth: 0,
+      flex: cardFlex,
+      minWidth: 0,
       padding: 24, borderRadius: 30,
       background: GRADIENT,
       display: 'flex', flexDirection: 'column', gap: 16,
@@ -47,12 +49,15 @@ function MetricCard({ icon, label, value, trend, arrowUp, danger }) {
 }
 
 export default function MetricCards() {
+  const { isMobile } = useBreakpoint();
+  const cardFlex = isMobile ? '0 0 calc(50% - 10px)' : '1 0 0';
+
   return (
-    <div style={{ display: 'flex', gap: 20, alignItems: 'stretch' }}>
-      <MetricCard icon={imgRevenueIcon}   label="Revenue"         value="$89.2M" trend="8.7%"  arrowUp={false} danger={true} />
-      <MetricCard icon={imgCashFlowIcon}  label="Cash Flow"       value="$4.1M"  trend="22.1%" arrowUp={false} danger={true} />
-      <MetricCard icon={imgDebtIcon}      label="Debt Exposure"   value="$54.8M" trend="12%"   arrowUp={true}  danger={true} />
-      <MetricCard icon={imgLiquidityIcon} label="Liquidity Ratio" value="1.12"   trend="0.08%" arrowUp={false} danger={true} />
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20, alignItems: 'stretch' }}>
+      <MetricCard icon={imgRevenueIcon}   label="Revenue"         value="$89.2M" trend="8.7%"  arrowUp={false} danger={true}  cardFlex={cardFlex} />
+      <MetricCard icon={imgCashFlowIcon}  label="Cash Flow"       value="$4.1M"  trend="22.1%" arrowUp={false} danger={true}  cardFlex={cardFlex} />
+      <MetricCard icon={imgDebtIcon}      label="Debt Exposure"   value="$54.8M" trend="12%"   arrowUp={true}  danger={true}  cardFlex={cardFlex} />
+      <MetricCard icon={imgLiquidityIcon} label="Liquidity Ratio" value="1.12"   trend="0.08%" arrowUp={false} danger={true}  cardFlex={cardFlex} />
     </div>
   );
 }

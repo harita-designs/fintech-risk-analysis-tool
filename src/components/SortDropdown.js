@@ -5,16 +5,15 @@ const OPTIONS = ['All', 'High Risk', 'Medium Risk', 'Low Risk', 'Review Needed']
 
 export default function SortDropdown({ value, onChange }) {
   const [open, setOpen] = useState(false);
-
   const selected = value || '';
 
   return (
-    <div style={{ position: 'relative', flexShrink: 0 }}>
+    <div style={{ position: 'relative', flexShrink: 0, width: '100%', maxWidth: 320 }}>
       <button
         onClick={() => setOpen(o => !o)}
         style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          width: 333, padding: '10px 30px', borderRadius: 30,
+          width: '100%', padding: '10px 24px', borderRadius: 30,
           border: '0.3px solid #14397d', background: '#f8f7ff',
           cursor: 'pointer', gap: 10, fontFamily: 'Outfit, sans-serif',
         }}
@@ -25,7 +24,7 @@ export default function SortDropdown({ value, onChange }) {
         </span>
         <img
           src={imgExpandArrow} alt=""
-          style={{ width: 18, height: 18, objectFit: 'contain', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
+          style={{ width: 18, height: 18, objectFit: 'contain', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', flexShrink: 0 }}
         />
       </button>
 
@@ -40,7 +39,7 @@ export default function SortDropdown({ value, onChange }) {
               key={opt}
               onClick={() => { onChange(opt === 'All' ? '' : opt); setOpen(false); }}
               style={{
-                padding: '16px 30px', fontSize: 20, fontWeight: 400,
+                padding: '14px 24px', fontSize: 18, fontWeight: 400,
                 color: '#081732', letterSpacing: '-0.31px', cursor: 'pointer',
                 borderTop: i > 0 ? '0.3px solid rgba(20,57,125,0.1)' : 'none',
                 background: selected === opt ? 'rgba(40,113,250,0.08)' : 'transparent',

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 function FooterLink({ label }) {
   const [hovered, setHovered] = useState(false);
@@ -54,15 +55,21 @@ function FooterLink({ label }) {
 }
 
 export default function Footer() {
+  const { isMobile } = useBreakpoint();
   return (
     <div style={{
-      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      padding: '25px 30px', background: '#fefdff',
+      display: 'flex',
+      flexDirection: isMobile ? 'column' : 'row',
+      alignItems: isMobile ? 'flex-start' : 'center',
+      justifyContent: 'space-between',
+      gap: isMobile ? 12 : 0,
+      padding: isMobile ? '20px 20px' : '25px 30px',
+      background: '#fefdff',
       fontSize: 14, fontWeight: 400, lineHeight: '20px',
       color: '#081732', letterSpacing: '-0.15px',
     }}>
       <span>© 2026 All rights reserved.</span>
-      <div style={{ display: 'flex', gap: 20 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>
         {['Documentation', 'API Status', 'Support'].map(link => (
           <FooterLink key={link} label={link} />
         ))}

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { imgXCircleRed, imgExtLinkUp } from '../assets/images';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const CARD_BG = 'linear-gradient(117.9deg, rgba(40,113,250,0.05) 50.33%, rgba(103,23,205,0.05) 95.81%)';
 
@@ -18,7 +19,6 @@ const EXTERNAL = [
   { id: 4, title: 'Market Intelligence', indicator: null, value: 'Normal market activity', desc: 'No news, M&A, or executive changes in last 30 days',        hasXCircle: false, updated: '2026-02-27' },
 ];
 
-// 7 columns — all equal flex:1 for even spacing
 const COLS = [
   { label: 'Signal',   flex: 1, align: 'left'   },
   { label: 'Severity', flex: 1, align: 'center' },
@@ -30,6 +30,7 @@ const COLS = [
 ];
 
 const TEXT = { fontFamily: 'Outfit, sans-serif' };
+const PURPLE_FILTER = 'invert(25%) sepia(100%) saturate(2500%) hue-rotate(260deg) brightness(90%)';
 const BLUE_FILTER = 'invert(30%) sepia(100%) saturate(2000%) hue-rotate(210deg) brightness(100%)';
 
 function SeverityBadge({ level }) {
@@ -57,79 +58,67 @@ function SignalRow({ signal, isLast }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <div style={{ display: 'flex', alignItems: 'center', paddingTop: 32, paddingBottom: 32, gap: 16 }}>
-        {/* Signal — flex:1, left */}
+      <div style={{ display: 'flex', alignItems: 'center', paddingTop: 24, paddingBottom: 24, gap: 12 }}>
         <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-          <span style={{ ...TEXT, fontSize: 16, fontWeight: 400, color: '#081732', lineHeight: '24px', letterSpacing: '0.07px' }}>
+          <span style={{ ...TEXT, fontSize: 15, fontWeight: 400, color: '#081732', lineHeight: '22px', letterSpacing: '0.07px' }}>
             {signal.name}
           </span>
         </div>
-        {/* Severity — flex:1, center */}
         <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <SeverityBadge level={signal.severity} />
         </div>
-        {/* Impact — flex:1, center */}
         <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ ...TEXT, fontSize: 16, fontWeight: 400, color: '#081732', lineHeight: '24px', letterSpacing: '0.07px' }}>
+          <span style={{ ...TEXT, fontSize: 15, fontWeight: 400, color: '#081732', lineHeight: '22px', letterSpacing: '0.07px' }}>
             {signal.impact}
           </span>
         </div>
-        {/* Detected — flex:1, center */}
         <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ ...TEXT, fontSize: 16, fontWeight: 400, color: '#808080', lineHeight: '24px', letterSpacing: '0.07px' }}>
+          <span style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#808080', lineHeight: '22px', letterSpacing: '0.07px', whiteSpace: 'nowrap' }}>
             {signal.detected}
           </span>
         </div>
-        {/* Status — flex:1, center */}
         <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ ...TEXT, fontSize: 16, fontWeight: 400, color: '#081732', lineHeight: '24px', letterSpacing: '0.07px' }}>
+          <span style={{ ...TEXT, fontSize: 15, fontWeight: 400, color: '#081732', lineHeight: '22px', letterSpacing: '0.07px' }}>
             {signal.status}
           </span>
         </div>
-        {/* Details — flex:1, matches all other columns */}
         <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-          <span style={{ ...TEXT, fontSize: 16, fontWeight: 400, color: '#808080', lineHeight: '24px', letterSpacing: '0.07px' }}>
+          <span style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#808080', lineHeight: '22px', letterSpacing: '0.07px' }}>
             {signal.desc}
           </span>
         </div>
-        {/* Action — flex:1, center */}
         <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <button
             onMouseEnter={() => setViewHovered(true)}
             onMouseLeave={() => setViewHovered(false)}
             style={{
               background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-              ...TEXT, fontSize: 16, fontWeight: 600,
+              ...TEXT, fontSize: 15, fontWeight: 600,
               color: viewHovered ? '#6717cd' : '#2871fa',
-              lineHeight: '24px', letterSpacing: '0.07px',
-              transition: 'color 0.2s ease',
+              lineHeight: '22px', letterSpacing: '0.07px',
+              transition: 'color 0.2s ease', whiteSpace: 'nowrap',
             }}
           >
             View →
           </button>
         </div>
       </div>
-
       {!isLast && <Divider />}
     </div>
   );
 }
 
-const PURPLE_FILTER = 'invert(25%) sepia(100%) saturate(2500%) hue-rotate(260deg) brightness(90%)';
-
-function ExternalCard({ card }) {
+function ExternalCard({ card, cardFlex }) {
   const [linkHovered, setLinkHovered] = useState(false);
   return (
-    <div
-      onClick={() => {}}
-      style={{
-        background: '#fefdff', borderRadius: 20,
-        padding: '20px 25px', display: 'flex', flexDirection: 'column', gap: 16, flex: 1,
-        cursor: 'pointer',
-        border: '0.3px solid #000',
-      }}
-    >
-      {/* Title + indicator */}
+    <div style={{
+      background: '#fefdff', borderRadius: 20,
+      padding: '20px 25px', display: 'flex', flexDirection: 'column', gap: 16,
+      flex: cardFlex,
+      cursor: 'pointer',
+      border: '0.3px solid #000',
+      minWidth: 0,
+    }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <span style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#4a5565', lineHeight: '20px', letterSpacing: '-0.15px' }}>
           {card.title}
@@ -137,41 +126,36 @@ function ExternalCard({ card }) {
         {card.indicator && <span style={{ fontSize: 18 }}>{card.indicator}</span>}
       </div>
 
-      {/* Main value — equal margin above and below for balanced spacing */}
-      <span style={{ ...TEXT, fontSize: 24, fontWeight: 600, color: '#364153', lineHeight: '32px', letterSpacing: '0.72px', margin: '8px 0' }}>
+      <span style={{ ...TEXT, fontSize: 22, fontWeight: 600, color: '#364153', lineHeight: '30px', letterSpacing: '0.72px', margin: '4px 0' }}>
         {card.value}
       </span>
 
-      {/* Description */}
       {card.hasXCircle ? (
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <img src={imgXCircleRed} alt="" style={{ width: 16, height: 16, flexShrink: 0 }} />
-          <span style={{ ...TEXT, fontSize: 15, color: '#7c7c80', lineHeight: '20px' }}>{card.desc}</span>
+          <span style={{ ...TEXT, fontSize: 14, color: '#7c7c80', lineHeight: '20px' }}>{card.desc}</span>
         </div>
       ) : (
-        <span style={{ ...TEXT, fontSize: 15, color: '#7c7c80', lineHeight: '20px' }}>{card.desc}</span>
+        <span style={{ ...TEXT, fontSize: 14, color: '#7c7c80', lineHeight: '20px' }}>{card.desc}</span>
       )}
 
       <Divider />
 
-      {/* Footer — last line: bigger font, one shade lighter */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ ...TEXT, fontSize: 14, fontWeight: 600, color: '#a5a5aa', lineHeight: '20px' }}>
+        <span style={{ ...TEXT, fontSize: 13, fontWeight: 600, color: '#a5a5aa', lineHeight: '20px' }}>
           Last updated: {card.updated}
         </span>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img
-            src={imgExtLinkUp}
-            alt="External link"
-            onMouseEnter={() => setLinkHovered(true)}
-            onMouseLeave={() => setLinkHovered(false)}
-            style={{
-              width: 22, height: 22, objectFit: 'contain', transform: 'rotate(45deg)',
-              filter: linkHovered ? PURPLE_FILTER : BLUE_FILTER,
-              cursor: 'pointer', transition: 'filter 0.2s ease',
-            }}
-          />
-        </div>
+        <img
+          src={imgExtLinkUp}
+          alt="External link"
+          onMouseEnter={() => setLinkHovered(true)}
+          onMouseLeave={() => setLinkHovered(false)}
+          style={{
+            width: 22, height: 22, objectFit: 'contain', transform: 'rotate(45deg)',
+            filter: linkHovered ? PURPLE_FILTER : BLUE_FILTER,
+            cursor: 'pointer', transition: 'filter 0.2s ease',
+          }}
+        />
       </div>
     </div>
   );
@@ -179,14 +163,14 @@ function ExternalCard({ card }) {
 
 export default function RiskSignalsTab() {
   const [plusHovered, setPlusHovered] = useState(false);
+  const { isMobile, isTablet } = useBreakpoint();
+  const extCardFlex = isMobile ? '0 0 100%' : isTablet ? '0 0 calc(50% - 8px)' : '1 0 0';
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 
-      {/* ── Risk Signals Table ── */}
+      {/* Risk Signals Table */}
       <div style={{ borderRadius: 30, padding: '30px 25px', background: CARD_BG, display: 'flex', flexDirection: 'column', gap: 20 }}>
-
-        {/* Heading + subtitle — deliberate gap between them */}
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <span style={{ ...TEXT, fontSize: 24, fontWeight: 600, color: '#081732', lineHeight: '32px', letterSpacing: '0.72px' }}>
@@ -215,33 +199,33 @@ export default function RiskSignalsTab() {
           </button>
         </div>
 
-        {/* White inner card */}
-        <div style={{ background: '#fefdff', borderRadius: 30, padding: '24px 32px' }}>
-          {/* Column headers — flex values must match SignalRow cells exactly */}
-          <div style={{ display: 'flex', alignItems: 'center', paddingBottom: 32, gap: 16 }}>
-            {COLS.map(col => (
-              <div key={col.label} style={{ flex: col.flex, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: col.align === 'left' ? 'flex-start' : 'center' }}>
-                <span style={{ ...TEXT, fontSize: 16, fontWeight: 600, color: '#081732', lineHeight: '24px', letterSpacing: '0.07px' }}>
-                  {col.label}
-                </span>
-              </div>
-            ))}
-          </div>
+        {/* Table — scrollable on mobile */}
+        <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+          <div style={{ background: '#fefdff', borderRadius: 30, padding: '24px 24px', minWidth: 640 }}>
+            {/* Column headers */}
+            <div style={{ display: 'flex', alignItems: 'center', paddingBottom: 24, gap: 12 }}>
+              {COLS.map(col => (
+                <div key={col.label} style={{ flex: col.flex, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: col.align === 'left' ? 'flex-start' : 'center' }}>
+                  <span style={{ ...TEXT, fontSize: 15, fontWeight: 600, color: '#081732', lineHeight: '22px', letterSpacing: '0.07px' }}>
+                    {col.label}
+                  </span>
+                </div>
+              ))}
+            </div>
 
-          <Divider my={0} />
+            <Divider my={0} />
 
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {SIGNALS.map((signal, idx) => (
-              <SignalRow key={signal.id} signal={signal} isLast={idx === SIGNALS.length - 1} />
-            ))}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {SIGNALS.map((signal, idx) => (
+                <SignalRow key={signal.id} signal={signal} isLast={idx === SIGNALS.length - 1} />
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ── External Intelligence ── */}
+      {/* External Intelligence */}
       <div style={{ borderRadius: 30, padding: '30px 25px 20px', background: CARD_BG, display: 'flex', flexDirection: 'column', gap: 20 }}>
-
-        {/* Heading + subtitle — small gap between them */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
           <span style={{ ...TEXT, fontSize: 24, fontWeight: 600, color: '#101828', lineHeight: '32px', letterSpacing: '0.72px' }}>
             External Intelligence
@@ -251,8 +235,8 @@ export default function RiskSignalsTab() {
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-          {EXTERNAL.map(card => <ExternalCard key={card.id} card={card} />)}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+          {EXTERNAL.map(card => <ExternalCard key={card.id} card={card} cardFlex={extCardFlex} />)}
         </div>
       </div>
 

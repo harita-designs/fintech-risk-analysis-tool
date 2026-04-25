@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { imgFPCheckCircle, imgFPAlertCircle } from '../assets/images';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const CARD_BG = 'linear-gradient(114deg, rgba(40,113,250,0.05) 50.33%, rgba(103,23,205,0.05) 95.81%)';
 const QUARTERS = ['Q1 2025', 'Q2 2025', 'Q3 2025', 'Q4 2025', 'Q1 2026'];
@@ -7,18 +8,14 @@ const Y_LABELS = [100, 75, 50, 25, 0];
 
 const W = 570, H = 375;
 const PAD_L = 32, PAD_R = 32, PAD_T = 16, PAD_B = 40;
-const chartW = W - PAD_L - PAD_R; // 506
-const chartH = H - PAD_T - PAD_B; // 319
+const chartW = W - PAD_L - PAD_R;
+const chartH = H - PAD_T - PAD_B;
 const BAR_W  = 51;
 const LABEL_X = PAD_L - 8;
 
-// Bar charts: 5 equal slots so Q1 bar never overlaps y-axis labels
 const slotW     = chartW / QUARTERS.length;
 const toSlotX   = i => PAD_L + slotW * (i + 0.5);
-
-// Line charts: stretch from y-axis to right edge (Q1 at PAD_L, Q1 2026 at W-PAD_R)
 const toLineX   = i => PAD_L + (i / (QUARTERS.length - 1)) * chartW;
-
 const toY = v => PAD_T + (1 - v / 100) * chartH;
 
 const REVENUE_DATA   = [93, 86, 81, 75, 66];
@@ -44,7 +41,6 @@ function roundedTopRect(x, y, w, h, r) {
   return `M ${x},${y + h} L ${x},${y + r2} Q ${x},${y} ${x + r2},${y} L ${x + w - r2},${y} Q ${x + w},${y} ${x + w},${y + r2} L ${x + w},${y + h} Z`;
 }
 
-// Grid lines + labels, xFn determines vertical line / x-label positions
 function SvgGrid({ xFn }) {
   return (
     <>
@@ -246,12 +242,12 @@ function ChartCard({ title, metricLabel, metricValue, subtitle, sidePad = 25, ch
   return (
     <div style={{
       flex: 1, minWidth: 0, borderRadius: 30,
-      padding: `50px ${sidePad}px`,
+      padding: `40px ${sidePad}px`,
       background: CARD_BG, display: 'flex', flexDirection: 'column', gap: 24,
     }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: 24, fontWeight: 600, color: '#101828', letterSpacing: '0.72px', lineHeight: '32px' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 20, fontWeight: 600, color: '#101828', letterSpacing: '0.72px', lineHeight: '28px' }}>
             {title}
           </span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
@@ -263,7 +259,7 @@ function ChartCard({ title, metricLabel, metricValue, subtitle, sidePad = 25, ch
             </span>
           </div>
         </div>
-        <span style={{ fontSize: 14, fontWeight: 400, color: '#808080', letterSpacing: '-0.15px', lineHeight: '20px' }}>
+        <span style={{ fontSize: 13, fontWeight: 400, color: '#808080', letterSpacing: '-0.15px', lineHeight: '20px' }}>
           {subtitle}
         </span>
       </div>
@@ -291,10 +287,10 @@ const RATIOS = [
   },
 ];
 
-function RatioCard({ ratio }) {
+function RatioCard({ ratio, cardFlex }) {
   return (
     <div style={{
-      flex: 1, minWidth: 0, background: '#fefdff', borderRadius: 20,
+      flex: cardFlex, minWidth: 0, background: '#fefdff', borderRadius: 20,
       padding: '20px 25px', display: 'flex', flexDirection: 'column', gap: 10,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -311,7 +307,7 @@ function RatioCard({ ratio }) {
       </span>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <img src={ratio.icon} alt="" style={{ width: 16, height: 16, objectFit: 'contain', flexShrink: 0 }} />
-        <span style={{ fontSize: 14, fontWeight: 400, color: '#101828', letterSpacing: '-0.15px', lineHeight: '20px', whiteSpace: 'nowrap' }}>
+        <span style={{ fontSize: 14, fontWeight: 400, color: '#101828', letterSpacing: '-0.15px', lineHeight: '20px' }}>
           {ratio.statusText}
         </span>
       </div>
@@ -320,15 +316,19 @@ function RatioCard({ ratio }) {
 }
 
 export default function FinancialPerformanceTab() {
+  const { isMobile, isTablet } = useBreakpoint();
+  const isStacked = isMobile || isTablet;
+  const ratioFlex = isMobile ? '0 0 100%' : isTablet ? '0 0 calc(50% - 8px)' : '1 0 0';
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-      {/* Bar charts — 40px side padding */}
-      <div style={{ display: 'flex', gap: 20 }}>
+      {/* Bar charts */}
+      <div style={{ display: 'flex', flexDirection: isStacked ? 'column' : 'row', gap: 20 }}>
         <ChartCard
           title="Revenue Trend"
           metricLabel="Period Change" metricValue="-8.7%"
           subtitle="Declining revenue signals weakening business fundamentals"
-          sidePad={40}
+          sidePad={isStacked ? 20 : 40}
         >
           <BarChartSVG data={REVENUE_DATA} gradId="revBarGrad" tooltipLabel="Revenue" />
         </ChartCard>
@@ -336,19 +336,19 @@ export default function FinancialPerformanceTab() {
           title="Operating Cash Flow (Quarterly)"
           metricLabel="Period Change" metricValue="-22.1%"
           subtitle="Volatile cash flow indicates operational stress"
-          sidePad={40}
+          sidePad={isStacked ? 20 : 40}
         >
           <BarChartSVG data={CASHFLOW_DATA} gradId="cfBarGrad" tooltipLabel="Cash Flow" />
         </ChartCard>
       </div>
 
-      {/* Line charts — 40px side padding for more breathing room */}
-      <div style={{ display: 'flex', gap: 20 }}>
+      {/* Line charts */}
+      <div style={{ display: 'flex', flexDirection: isStacked ? 'column' : 'row', gap: 20 }}>
         <ChartCard
           title="Debt Levels"
           metricLabel="D/EBITDA:" metricValue="61%"
           subtitle="Rising debt-to-EBITDA approaches covenant breach at 3.5x"
-          sidePad={40}
+          sidePad={isStacked ? 20 : 40}
         >
           <LineChartSVG data={DEBT_DATA} stroke="#1a2a4a" tooltipLabel="Debt" />
         </ChartCard>
@@ -356,7 +356,7 @@ export default function FinancialPerformanceTab() {
           title="Liquidity Trend"
           metricLabel="Current Ratio" metricValue="1.12x"
           subtitle="Current ratio below 1.5x indicates thin liquidity cushion"
-          sidePad={40}
+          sidePad={isStacked ? 20 : 40}
         >
           <LineChartSVG data={LIQUIDITY_DATA} stroke="#6717cd" tooltipLabel="Liquidity" />
         </ChartCard>
@@ -370,8 +370,8 @@ export default function FinancialPerformanceTab() {
         <span style={{ fontSize: 24, fontWeight: 600, color: '#101828', letterSpacing: '0.72px', lineHeight: '32px' }}>
           Key Financial Ratios
         </span>
-        <div style={{ display: 'flex', gap: 16 }}>
-          {RATIOS.map(r => <RatioCard key={r.label} ratio={r} />)}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+          {RATIOS.map(r => <RatioCard key={r.label} ratio={r} cardFlex={ratioFlex} />)}
         </div>
       </div>
     </div>

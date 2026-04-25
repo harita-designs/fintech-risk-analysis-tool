@@ -1,4 +1,5 @@
 import { imgCovenantXCircle } from '../assets/images';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const GRADIENT = 'linear-gradient(113.65deg, rgba(40,113,250,0.05) 50.33%, rgba(103,23,205,0.05) 95.81%)';
 
@@ -51,10 +52,11 @@ function BreachBadge() {
   );
 }
 
-function CovenantCard({ covenant }) {
+function CovenantCard({ covenant, cardFlex }) {
   return (
     <div style={{
-      flex: '1 0 0', minWidth: 0,
+      flex: cardFlex,
+      minWidth: 0,
       background: '#fefdff', borderRadius: 20,
       border: '0.5px solid rgba(20,57,125,0.2)',
       padding: '20px 16px',
@@ -91,6 +93,9 @@ function CovenantCard({ covenant }) {
 }
 
 export default function CovenantTracking() {
+  const { isMobile, isTablet } = useBreakpoint();
+  const cardFlex = isMobile ? '0 0 100%' : isTablet ? '0 0 calc(50% - 8px)' : '1 0 0';
+
   return (
     <div style={{
       width: '100%',
@@ -98,7 +103,7 @@ export default function CovenantTracking() {
       borderRadius: 30, padding: '30px 25px',
       display: 'flex', flexDirection: 'column', gap: 25,
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
         <span style={{ fontSize: 24, fontWeight: 600, color: '#081732', letterSpacing: '0.72px', lineHeight: '32px' }}>
           Covenant Tracking
         </span>
@@ -112,9 +117,9 @@ export default function CovenantTracking() {
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: 16 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
         {covenants.map((c, i) => (
-          <CovenantCard key={i} covenant={c} />
+          <CovenantCard key={i} covenant={c} cardFlex={cardFlex} />
         ))}
       </div>
     </div>

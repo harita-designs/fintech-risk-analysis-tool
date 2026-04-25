@@ -4,6 +4,7 @@ import {
   imgNotification, imgProfile,
 } from '../assets/images';
 import { borrowers } from '../data/borrowers';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const TOOLTIP_STYLE = {
   position: 'absolute',
@@ -73,11 +74,42 @@ function NavIconBtn({ icon, label, clickTooltip }) {
   );
 }
 
-function NotifyBtn() {
+function NotifyBtn({ compact }) {
   const [hovered, setHovered] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const ref = useRef(null);
   useClickOutside(ref, showTooltip, () => setShowTooltip(false));
+
+  if (compact) {
+    return (
+      <div ref={ref} style={{ position: 'relative', flexShrink: 0 }}>
+        <div
+          onClick={() => setShowTooltip(s => !s)}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          style={{
+            width: 44, height: 44, cursor: 'pointer',
+            borderRadius: '50%',
+            background: '#2871fa',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}
+        >
+          <img
+            src={imgNotification} alt="Alerts"
+            style={{
+              width: 26, height: 26, objectFit: 'contain',
+              filter: 'brightness(0) invert(1)',
+              transform: hovered ? 'rotate(-20deg)' : 'rotate(0deg)',
+              transition: 'transform 0.2s ease',
+            }}
+          />
+        </div>
+        {showTooltip && (
+          <div style={{ ...TOOLTIP_STYLE, left: '50%' }}>No recent alerts</div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div ref={ref} style={{ position: 'relative', flexShrink: 0 }}>
@@ -123,6 +155,7 @@ function NotifyBtn() {
 function SearchBar({ onSelectBorrower }) {
   const [query, setQuery] = useState('');
   const [focused, setFocused] = useState(false);
+  const { isMobile } = useBreakpoint();
 
   const suggestions = query.trim().length > 0
     ? borrowers.filter(b =>
@@ -141,24 +174,25 @@ function SearchBar({ onSelectBorrower }) {
   };
 
   return (
-    <div style={{ flex: 1, position: 'relative' }}>
+    <div style={{ flex: 1, position: 'relative', minWidth: 0 }}>
       <div style={{
-        display: 'flex', alignItems: 'center', gap: 18,
+        display: 'flex', alignItems: 'center', gap: 12,
         border: focused ? '0.5px solid #2871fa' : '0.5px solid #14397d',
-        borderRadius: 30, padding: '10px 30px',
+        borderRadius: 30, padding: isMobile ? '10px 18px' : '10px 30px',
         background: '#fefdff', transition: 'border 0.15s',
       }}>
-        <img src={imgSearch} alt="" style={{ width: 30, height: 30, objectFit: 'contain', flexShrink: 0 }} />
+        <img src={imgSearch} alt="" style={{ width: 24, height: 24, objectFit: 'contain', flexShrink: 0 }} />
         <input
           value={query}
           onChange={e => setQuery(e.target.value)}
           onFocus={() => setFocused(true)}
           onBlur={() => setTimeout(() => setFocused(false), 150)}
-          placeholder="Search by name, ID, or industry..."
+          placeholder={isMobile ? 'Search...' : 'Search by name, ID, or industry...'}
           style={{
             flex: 1, border: 'none', outline: 'none', background: 'transparent',
-            fontSize: 16, fontWeight: 400, color: '#081732',
+            fontSize: 15, fontWeight: 400, color: '#081732',
             fontFamily: 'Outfit, sans-serif', letterSpacing: '0.48px',
+            minWidth: 0,
           }}
         />
         {query && (
@@ -184,23 +218,23 @@ function SearchBar({ onSelectBorrower }) {
               key={b.id}
               onMouseDown={() => handleSelect(b)}
               style={{
-                padding: '14px 30px', cursor: 'pointer',
+                padding: '12px 20px', cursor: 'pointer',
                 borderTop: i > 0 ? '0.3px solid rgba(20,57,125,0.1)' : 'none',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
               }}
               onMouseEnter={e => e.currentTarget.style.background = 'rgba(40,113,250,0.06)'}
               onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
             >
-              <div>
-                <div style={{ fontSize: 16, fontWeight: 600, color: '#081732', letterSpacing: '0.07px' }}>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 15, fontWeight: 600, color: '#081732', letterSpacing: '0.07px' }}>
                   {b.name}
                 </div>
-                <div style={{ fontSize: 13, color: 'rgba(8,23,50,0.5)', letterSpacing: '-0.15px', marginTop: 2 }}>
+                <div style={{ fontSize: 12, color: 'rgba(8,23,50,0.5)', letterSpacing: '-0.15px', marginTop: 2 }}>
                   {b.id} · {b.industry}
                 </div>
               </div>
               <span style={{
-                fontSize: 12, fontWeight: 700, color: '#fefdff',
+                fontSize: 12, fontWeight: 700, color: '#fefdff', flexShrink: 0,
                 background: b.riskLevel === 'HIGH' ? '#e9000b' : b.riskLevel === 'LOW' ? '#05c04b' : '#d69200',
                 borderRadius: 30, padding: '2px 10px',
               }}>
@@ -223,7 +257,7 @@ function HomeBtn({ onBack }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        width: 50, height: 50, flexShrink: 0, cursor: 'pointer',
+        width: 44, height: 44, flexShrink: 0, cursor: 'pointer',
         borderRadius: '50%',
         background: hovered ? '#2871fa' : '#f8f7ff',
         border: hovered ? 'none' : '0.3px solid #14397d',
@@ -231,7 +265,7 @@ function HomeBtn({ onBack }) {
         transition: 'background 0.15s, border 0.15s',
       }}
     >
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
         <path
           d="M2 8.5L11 2L20 8.5V19C20 19.5523 19.5523 20 19 20H14.5V14.5C14.5 14.2239 14.2761 14 14 14H8C7.72386 14 7.5 14.2239 7.5 14.5V20H3C2.44772 20 2 19.5523 2 19V8.5Z"
           stroke={hovered ? '#ffffff' : '#081732'}
@@ -254,6 +288,7 @@ const PROFILE_DATA = {
 function ProfileBtn() {
   const [hovered, setHovered] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const { isMobile } = useBreakpoint();
   const ref = useRef(null);
   useClickOutside(ref, showDropdown, () => setShowDropdown(false));
 
@@ -264,7 +299,8 @@ function ProfileBtn() {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         style={{
-          width: 50, height: 50, borderRadius: '50%', overflow: 'hidden',
+          width: isMobile ? 44 : 50, height: isMobile ? 44 : 50,
+          borderRadius: '50%', overflow: 'hidden',
           cursor: 'pointer',
           outline: hovered || showDropdown ? '2px solid #2871fa' : '2px solid transparent',
           outlineOffset: '2px',
@@ -286,7 +322,6 @@ function ProfileBtn() {
           overflow: 'hidden',
           fontFamily: 'Outfit, sans-serif',
         }}>
-          {/* Avatar + name section */}
           <div style={{
             padding: '24px 24px 20px',
             background: 'linear-gradient(116.96deg, rgba(40,113,250,0.06) 0%, rgba(103,23,205,0.06) 100%)',
@@ -318,17 +353,14 @@ function ProfileBtn() {
             </div>
           </div>
 
-          {/* Info rows */}
           <div style={{ padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
             <ProfileRow label="Department" value={PROFILE_DATA.department} />
             <ProfileRow label="Email" value={PROFILE_DATA.email} />
             <ProfileRow label="Last login" value={PROFILE_DATA.lastLogin} />
           </div>
 
-          {/* Divider */}
           <div style={{ height: '0.5px', background: '#e1d1f5', margin: '0 24px' }} />
 
-          {/* Sign out */}
           <div style={{ padding: '12px 24px 18px' }}>
             <SignOutBtn />
           </div>
@@ -377,10 +409,10 @@ function SignOutBtn() {
   );
 }
 
-function RiskLensLogo() {
+function RiskLensLogo({ small }) {
   return (
     <div style={{ flexShrink: 0, userSelect: 'none' }}>
-      <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: 26, fontWeight: 700, letterSpacing: '0.5px', lineHeight: 1 }}>
+      <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: small ? 20 : 26, fontWeight: 700, letterSpacing: '0.5px', lineHeight: 1 }}>
         <span style={{
           background: 'linear-gradient(116.96deg, #2871fa 30%, #6717cd 100%)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
@@ -392,22 +424,48 @@ function RiskLensLogo() {
 }
 
 export default function Navbar({ onSelectBorrower, onBack }) {
+  const { isMobile, isTablet } = useBreakpoint();
+
+  if (isMobile) {
+    return (
+      <div style={{
+        display: 'flex', flexDirection: 'column', gap: 12,
+        padding: '14px 16px',
+        background: '#fefdff', borderBottom: '1px solid #e1d1f5',
+        position: 'sticky', top: 0, zIndex: 100,
+        width: '100%',
+      }}>
+        {/* Row 1: Logo + actions */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <RiskLensLogo small />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            {onBack && <HomeBtn onBack={onBack} />}
+            <NotifyBtn compact />
+            <ProfileBtn />
+          </div>
+        </div>
+        {/* Row 2: Search */}
+        <SearchBar onSelectBorrower={onSelectBorrower} />
+      </div>
+    );
+  }
+
   return (
     <div style={{
-      display: 'flex', alignItems: 'center', gap: 24,
-      padding: '0 30px', height: 110,
+      display: 'flex', alignItems: 'center', gap: isTablet ? 16 : 24,
+      padding: isTablet ? '0 20px' : '0 30px', height: 90,
       background: '#fefdff', borderBottom: '1px solid #e1d1f5',
       position: 'sticky', top: 0, zIndex: 100,
       width: '100%',
     }}>
       <RiskLensLogo />
       <SearchBar onSelectBorrower={onSelectBorrower} />
-      <div style={{ display: 'flex', alignItems: 'center', gap: 25, flexShrink: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: isTablet ? 12 : 25, flexShrink: 0 }}>
         {onBack && <HomeBtn onBack={onBack} />}
-        <NavIconBtn icon={imgBarChart}   label="Analytics" clickTooltip="Feature coming soon" />
-        <NavIconBtn icon={imgComments}   label="Messages"  clickTooltip="No recent messages"  />
-        <NavIconBtn icon={imgSettings}   label="Settings"  clickTooltip="Feature coming soon" />
-        <NotifyBtn />
+        {!isTablet && <NavIconBtn icon={imgBarChart}   label="Analytics" clickTooltip="Feature coming soon" />}
+        {!isTablet && <NavIconBtn icon={imgComments}   label="Messages"  clickTooltip="No recent messages"  />}
+        {!isTablet && <NavIconBtn icon={imgSettings}   label="Settings"  clickTooltip="Feature coming soon" />}
+        <NotifyBtn compact={isTablet} />
         <ProfileBtn />
       </div>
     </div>
