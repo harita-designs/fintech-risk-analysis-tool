@@ -162,7 +162,6 @@ function ExternalCard({ card, cardFlex }) {
 }
 
 export default function RiskSignalsTab() {
-  const [plusHovered, setPlusHovered] = useState(false);
   const { isMobile, isTablet } = useBreakpoint();
   const extCardFlex = isMobile ? '0 0 100%' : isTablet ? '0 0 calc(50% - 8px)' : '1 0 0';
 
@@ -180,23 +179,6 @@ export default function RiskSignalsTab() {
               Internal risk factors detected by Dragin's monitoring engine
             </p>
           </div>
-          <button
-            onMouseEnter={() => setPlusHovered(true)}
-            onMouseLeave={() => setPlusHovered(false)}
-            style={{
-              background: plusHovered
-                ? '#2871fa'
-                : 'linear-gradient(180deg, rgba(40,113,250,0.1) 0%, rgba(103,23,205,0.1) 100%)',
-              borderRadius: 100, width: 36, height: 36,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              border: 'none', cursor: 'pointer', padding: 0, flexShrink: 0,
-              transition: 'background 0.2s ease',
-            }}
-          >
-            <span style={{ ...TEXT, fontSize: 22, fontWeight: 400, color: plusHovered ? '#fff' : '#101828', lineHeight: 1, marginTop: -1, transition: 'color 0.2s ease' }}>
-              +
-            </span>
-          </button>
         </div>
 
         {/* Table — scrollable on mobile */}
