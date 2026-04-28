@@ -139,7 +139,6 @@ Finally after pushing everything in GitHub, I deployed it using Vercel.
 
 **Goal**: Help analysts quickly identify which borrowers need attention.
 
-[INSERT: Portfolio screenshot]
 
 **Key Elements**
 - Card layout for side-by-side comparison
@@ -155,7 +154,6 @@ Finally after pushing everything in GitHub, I deployed it using Vercel.
 
 **Goal**: Help analysts understand why a borrower is at risk.
 
-[INSERT: Risk workspace screenshot]
 
 **Key Elements**
 - Prominent risk score with status indicator
@@ -166,26 +164,6 @@ Finally after pushing everything in GitHub, I deployed it using Vercel.
 - Context panel with notes, covenants, and documents
 
 **Outcome**: A clear, decision-focused workflow that enables analysts to quickly identify high-risk borrowers and confidently investigate the drivers behind financial risk.
-
----
-
-### Screen 3: Risk Profile Visualization
-
-[INSERT: Risk profile screenshot]
-
-Visual bar charts showing risk patterns across categories. Analysts can identify issues at a glance without parsing tables.
-
----
-
-## Design System
-
-### Typography
-
-[INSERT: Typography screenshot]
-
-### Color Palette
-
-[INSERT: Color palette screenshot]
 
 ---
 
