@@ -22,14 +22,23 @@ function FooterLink({ label }) {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         style={{
-          cursor: 'pointer', fontSize: 14, fontWeight: 400,
-          color: hovered || showTooltip ? '#2871fa' : '#081732',
+          cursor: 'pointer', fontSize: 14, fontWeight: 600,
+          background: 'linear-gradient(116.96deg, #2871fa 0%, #6717cd 100%)',
+          WebkitBackgroundClip: 'text',
+          backgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
           letterSpacing: '-0.15px', lineHeight: '20px',
-          textDecoration: hovered ? 'underline' : 'none',
-          transition: 'color 0.15s',
+          position: 'relative', display: 'inline-block',
         }}
       >
         {label}
+        <span style={{
+          position: 'absolute', bottom: 0, left: 0,
+          height: '1.5px',
+          width: hovered || showTooltip ? '100%' : '0%',
+          background: 'linear-gradient(90deg, #2871fa 0%, #6717cd 100%)',
+          transition: 'width 0.25s ease',
+        }} />
       </span>
       {showTooltip && (
         <div style={{
@@ -64,7 +73,7 @@ export default function Footer() {
       justifyContent: 'space-between',
       gap: isMobile ? 12 : 0,
       padding: isMobile ? '20px 20px' : '25px 30px',
-      background: '#fefdff',
+      background: '#f8f7ff',
       fontSize: 14, fontWeight: 400, lineHeight: '20px',
       color: '#081732', letterSpacing: '-0.15px',
     }}>

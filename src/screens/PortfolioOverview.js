@@ -5,7 +5,7 @@ import PortfolioStats from '../components/PortfolioStats';
 import PortfolioRow from '../components/PortfolioRow';
 import SortDropdown from '../components/SortDropdown';
 import { borrowers } from '../data/borrowers';
-import { imgArrowLeft, imgArrowCircle } from '../assets/images';
+import { imgArrowLeft } from '../assets/images';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 
 function PaginationBtn({ direction, disabled }) {
@@ -14,29 +14,20 @@ function PaginationBtn({ direction, disabled }) {
     <button
       disabled={disabled}
       style={{
-        position: 'relative', width: 50, height: 50, borderRadius: '50%', padding: 0,
-        border: 'none', background: 'transparent',
+        width: 38, height: 38, borderRadius: '50%', padding: 0,
+        border: `0.3px solid ${disabled ? 'rgba(20,57,125,0.1)' : 'rgba(20,57,125,0.25)'}`,
+        background: '#ffffff',
         cursor: disabled ? 'not-allowed' : 'pointer',
         display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
       }}
     >
       <img
-        src={imgArrowCircle}
-        alt=""
-        style={{
-          position: 'absolute', inset: 0, width: '100%', height: '100%',
-          filter: disabled ? 'grayscale(100%) brightness(1.1)' : 'none',
-          opacity: disabled ? 0.35 : 1,
-        }}
-      />
-      <img
         src={imgArrowLeft}
         alt={isNext ? 'Next' : 'Previous'}
         style={{
-          position: 'relative', width: 30, height: 30, objectFit: 'contain',
+          width: 18, height: 18, objectFit: 'contain',
           transform: isNext ? 'scaleX(-1)' : 'none',
-          filter: disabled ? 'grayscale(100%)' : 'none',
-          opacity: disabled ? 0.35 : 1,
+          opacity: disabled ? 0.25 : 1,
         }}
       />
     </button>
@@ -61,15 +52,15 @@ export default function PortfolioOverview({ onSelectBorrower }) {
   const isAllShown = filtered.length >= total;
 
   return (
-    <div style={{ minHeight: '100vh', background: '#fefdff', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', background: '#f8f7ff', display: 'flex', flexDirection: 'column' }}>
       <Navbar onSelectBorrower={onSelectBorrower} />
 
       <div style={{ flex: 1 }}>
-        <div style={{ padding: isMobile ? '16px 16px 0' : '24px 27px 0' }}>
+        <div style={{ padding: isMobile ? '12px 14px 0' : '16px 20px 0' }}>
           <PortfolioStats />
         </div>
 
-        <div style={{ margin: isMobile ? '16px 16px 0' : '24px 27px 0', height: '0.3px', background: 'rgba(20,57,125,0.2)' }} />
+        <div style={{ margin: isMobile ? '12px 14px 0' : '16px 20px 0', height: '0.3px', background: 'rgba(20,57,125,0.2)' }} />
 
         <div style={{
           display: 'flex',
@@ -77,10 +68,10 @@ export default function PortfolioOverview({ onSelectBorrower }) {
           alignItems: isMobile ? 'flex-start' : 'center',
           justifyContent: 'space-between',
           gap: isMobile ? 12 : 0,
-          padding: isMobile ? '20px 16px 16px' : '28px 27px 24px',
+          padding: isMobile ? '12px 14px 10px' : '16px 20px 12px',
         }}>
           <h2 style={{
-            fontSize: isMobile ? 26 : 40, fontWeight: 600, color: '#081732',
+            fontSize: isMobile ? 20 : 28, fontWeight: 600, color: '#081732',
             letterSpacing: '0.5px', margin: 0,
           }}>
             Portfolio Overview
@@ -88,7 +79,7 @@ export default function PortfolioOverview({ onSelectBorrower }) {
           <SortDropdown value={sortFilter} onChange={setSortFilter} />
         </div>
 
-        <div style={{ padding: isMobile ? '0 16px 0' : '16px 27px 0', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ padding: isMobile ? '0 14px 0' : '0 20px 0', display: 'flex', flexDirection: 'column', gap: 10 }}>
           {filtered.map(b => (
             <PortfolioRow key={b.id} borrower={b} onClick={onSelectBorrower} />
           ))}
@@ -96,10 +87,10 @@ export default function PortfolioOverview({ onSelectBorrower }) {
 
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 16,
-          padding: isMobile ? '16px 16px 32px' : '20px 27px 40px',
+          padding: isMobile ? '12px 14px 24px' : '14px 20px 28px',
           flexWrap: 'wrap',
         }}>
-          <span style={{ fontSize: 14, fontWeight: 400, lineHeight: '20px', color: '#081732', letterSpacing: '-0.15px' }}>
+          <span style={{ fontSize: 14, fontWeight: 400, lineHeight: '20px', color: 'rgba(8,23,50,0.4)', letterSpacing: '-0.15px' }}>
             Showing {filtered.length} of {total} borrowers
           </span>
           <div style={{ display: 'flex', gap: 16 }}>

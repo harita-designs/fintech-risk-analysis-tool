@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { imgXCircleRed, imgExtLinkUp } from '../assets/images';
+import { useState, useRef, useEffect } from 'react';
+import { imgXCircleRed, imgAlertCircle, imgExtLinkUpGradient } from '../assets/images';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 
-const CARD_BG = 'linear-gradient(117.9deg, rgba(40,113,250,0.05) 50.33%, rgba(103,23,205,0.05) 95.81%)';
+const CARD_BG  = '#fefdff';
+const INNER_BG = '#F9F8FF';
 
 const SIGNALS = [
   { id: 1, name: 'Cash Flow',    severity: 'HIGH',   impact: '22%', detected: '2/24/2026', status: 'Open', desc: 'Significant decline in cash flow generation' },
@@ -30,19 +31,17 @@ const COLS = [
 ];
 
 const TEXT = { fontFamily: 'Outfit, sans-serif' };
-const PURPLE_FILTER = 'invert(25%) sepia(100%) saturate(2500%) hue-rotate(260deg) brightness(90%)';
-const BLUE_FILTER = 'invert(30%) sepia(100%) saturate(2000%) hue-rotate(210deg) brightness(100%)';
 
 function SeverityBadge({ level }) {
   const isHigh = level === 'HIGH';
   return (
     <div style={{
       background: isHigh ? '#e9000b' : '#d69200',
-      borderRadius: 30, padding: '3px 12px',
+      borderRadius: 30, padding: '1px 10px',
       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
       minWidth: 57,
     }}>
-      <span style={{ ...TEXT, fontSize: 12, fontWeight: 600, color: '#fff', lineHeight: '18px', textAlign: 'center' }}>
+      <span style={{ ...TEXT, fontSize: 8, fontWeight: 600, color: '#fefdff', lineHeight: '16px', textAlign: 'center' }}>
         {level}
       </span>
     </div>
@@ -55,11 +54,27 @@ function Divider({ color = 'rgba(8,23,50,0.08)', my = 0 }) {
 
 function SignalRow({ signal, isLast }) {
   const [viewHovered, setViewHovered] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const rowRef = useRef(null);
+
+  useEffect(() => {
+    if (!showTooltip) return;
+    const handler = (e) => {
+      if (rowRef.current && !rowRef.current.contains(e.target)) setShowTooltip(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showTooltip]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <div style={{ display: 'flex', alignItems: 'center', paddingTop: 24, paddingBottom: 24, gap: 12 }}>
-        <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+      <div ref={rowRef} style={{ display: 'flex', alignItems: 'center', paddingTop: 12, paddingBottom: 12, gap: 12 }}>
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-start' }}>
+          <img
+            src={signal.severity === 'HIGH' ? imgXCircleRed : imgAlertCircle}
+            alt=""
+            style={{ width: 16, height: 16, flexShrink: 0 }}
+          />
           <span style={{ ...TEXT, fontSize: 15, fontWeight: 400, color: '#081732', lineHeight: '22px', letterSpacing: '0.07px' }}>
             {signal.name}
           </span>
@@ -87,20 +102,45 @@ function SignalRow({ signal, isLast }) {
             {signal.desc}
           </span>
         </div>
-        <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
           <button
+            onClick={() => setShowTooltip(s => !s)}
             onMouseEnter={() => setViewHovered(true)}
             onMouseLeave={() => setViewHovered(false)}
             style={{
-              background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+              border: 'none', cursor: 'pointer', padding: 0,
               ...TEXT, fontSize: 15, fontWeight: 600,
-              color: viewHovered ? '#6717cd' : '#2871fa',
+              background: 'linear-gradient(90deg, #2871fa 0%, #6717cd 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
               lineHeight: '22px', letterSpacing: '0.07px',
-              transition: 'color 0.2s ease', whiteSpace: 'nowrap',
+              whiteSpace: 'nowrap',
+              opacity: viewHovered ? 0.75 : 1,
+              transition: 'opacity 0.15s',
             }}
           >
             View →
           </button>
+          {showTooltip && (
+            <div style={{
+              position: 'absolute',
+              bottom: 'calc(100% + 8px)',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              background: '#fefdff',
+              border: '0.5px solid #e1d1f5',
+              borderRadius: 12,
+              padding: '10px 18px',
+              boxShadow: '0 4px 24px rgba(20,57,125,0.14)',
+              fontSize: 13, fontWeight: 500, color: '#081732',
+              whiteSpace: 'nowrap', zIndex: 500,
+              fontFamily: 'Outfit, sans-serif', letterSpacing: '0.07px',
+              pointerEvents: 'none',
+            }}>
+              Feature coming soon
+            </div>
+          )}
         </div>
       </div>
       {!isLast && <Divider />}
@@ -112,50 +152,55 @@ function ExternalCard({ card, cardFlex }) {
   const [linkHovered, setLinkHovered] = useState(false);
   return (
     <div style={{
-      background: '#fefdff', borderRadius: 20,
-      padding: '20px 25px', display: 'flex', flexDirection: 'column', gap: 16,
+      background: INNER_BG, borderRadius: 8,
+      padding: '14px 16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
       flex: cardFlex,
       cursor: 'pointer',
-      border: '0.3px solid #000',
+      border: '0.3px solid rgba(20,57,125,0.15)',
       minWidth: 0,
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#4a5565', lineHeight: '20px', letterSpacing: '-0.15px' }}>
-          {card.title}
-        </span>
-        {card.indicator && <span style={{ fontSize: 18 }}>{card.indicator}</span>}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, paddingBottom: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <span style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#4a5565', lineHeight: '20px', letterSpacing: '-0.15px' }}>
+            {card.title}
+          </span>
+          {card.indicator && <span style={{ fontSize: 18 }}>{card.indicator}</span>}
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <span style={{ ...TEXT, fontSize: 16, fontWeight: 600, color: '#364153', lineHeight: '22px', letterSpacing: '0.3px' }}>
+            {card.value}
+          </span>
+
+          {card.hasXCircle ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <img src={imgXCircleRed} alt="" style={{ width: 16, height: 16, flexShrink: 0 }} />
+              <span style={{ ...TEXT, fontSize: 14, color: '#7c7c80', lineHeight: '20px' }}>{card.desc}</span>
+            </div>
+          ) : (
+            <span style={{ ...TEXT, fontSize: 14, color: '#7c7c80', lineHeight: '20px' }}>{card.desc}</span>
+          )}
+        </div>
       </div>
 
-      <span style={{ ...TEXT, fontSize: 22, fontWeight: 600, color: '#364153', lineHeight: '30px', letterSpacing: '0.72px', margin: '4px 0' }}>
-        {card.value}
-      </span>
-
-      {card.hasXCircle ? (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <img src={imgXCircleRed} alt="" style={{ width: 16, height: 16, flexShrink: 0 }} />
-          <span style={{ ...TEXT, fontSize: 14, color: '#7c7c80', lineHeight: '20px' }}>{card.desc}</span>
+      <div>
+        <Divider />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 12 }}>
+          <span style={{ ...TEXT, fontSize: 13, fontWeight: 600, color: '#a5a5aa', lineHeight: '20px' }}>
+            Last updated: {card.updated}
+          </span>
+          <img
+            src={imgExtLinkUpGradient}
+            alt="External link"
+            onMouseEnter={() => setLinkHovered(true)}
+            onMouseLeave={() => setLinkHovered(false)}
+            style={{
+              width: 22, height: 22, objectFit: 'contain', transform: 'rotate(45deg)',
+              opacity: linkHovered ? 0.75 : 1,
+              cursor: 'pointer', transition: 'opacity 0.15s',
+            }}
+          />
         </div>
-      ) : (
-        <span style={{ ...TEXT, fontSize: 14, color: '#7c7c80', lineHeight: '20px' }}>{card.desc}</span>
-      )}
-
-      <Divider />
-
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ ...TEXT, fontSize: 13, fontWeight: 600, color: '#a5a5aa', lineHeight: '20px' }}>
-          Last updated: {card.updated}
-        </span>
-        <img
-          src={imgExtLinkUp}
-          alt="External link"
-          onMouseEnter={() => setLinkHovered(true)}
-          onMouseLeave={() => setLinkHovered(false)}
-          style={{
-            width: 22, height: 22, objectFit: 'contain', transform: 'rotate(45deg)',
-            filter: linkHovered ? PURPLE_FILTER : BLUE_FILTER,
-            cursor: 'pointer', transition: 'filter 0.2s ease',
-          }}
-        />
       </div>
     </div>
   );
@@ -169,13 +214,13 @@ export default function RiskSignalsTab() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 
       {/* Risk Signals Table */}
-      <div style={{ borderRadius: 30, padding: '30px 25px', background: CARD_BG, display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div style={{ borderRadius: 8, padding: '16px', background: CARD_BG, border: '0.3px solid rgba(20,57,125,0.15)', display: 'flex', flexDirection: 'column', gap: 14 }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <span style={{ ...TEXT, fontSize: 24, fontWeight: 600, color: '#081732', lineHeight: '32px', letterSpacing: '0.72px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <span style={{ ...TEXT, fontSize: 16, fontWeight: 600, color: '#081732', lineHeight: '22px', letterSpacing: '0.3px' }}>
               Risk Signals ({SIGNALS.length})
             </span>
-            <p style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#808080', lineHeight: '20px', letterSpacing: '-0.15px', margin: 0 }}>
+            <p style={{ ...TEXT, fontSize: 13, fontWeight: 400, color: '#808080', lineHeight: '18px', letterSpacing: '-0.15px', margin: 0, marginBottom: 8 }}>
               Internal risk factors detected by Dragin's monitoring engine
             </p>
           </div>
@@ -183,9 +228,9 @@ export default function RiskSignalsTab() {
 
         {/* Table — scrollable on mobile */}
         <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-          <div style={{ background: '#fefdff', borderRadius: 30, padding: '24px 24px', minWidth: 640 }}>
+          <div style={{ background: INNER_BG, borderRadius: 8, padding: '14px 16px', minWidth: 640 }}>
             {/* Column headers */}
-            <div style={{ display: 'flex', alignItems: 'center', paddingBottom: 24, gap: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', paddingBottom: 12, gap: 12 }}>
               {COLS.map(col => (
                 <div key={col.label} style={{ flex: col.flex, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: col.align === 'left' ? 'flex-start' : 'center' }}>
                   <span style={{ ...TEXT, fontSize: 15, fontWeight: 600, color: '#081732', lineHeight: '22px', letterSpacing: '0.07px' }}>
@@ -207,17 +252,17 @@ export default function RiskSignalsTab() {
       </div>
 
       {/* External Intelligence */}
-      <div style={{ borderRadius: 30, padding: '30px 25px 20px', background: CARD_BG, display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div style={{ borderRadius: 8, padding: '16px 16px 12px', background: CARD_BG, border: '0.3px solid rgba(20,57,125,0.15)', display: 'flex', flexDirection: 'column', gap: 14 }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-          <span style={{ ...TEXT, fontSize: 24, fontWeight: 600, color: '#101828', lineHeight: '32px', letterSpacing: '0.72px' }}>
+          <span style={{ ...TEXT, fontSize: 16, fontWeight: 600, color: '#101828', lineHeight: '22px', letterSpacing: '0.3px' }}>
             External Intelligence
           </span>
-          <p style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#808080', lineHeight: '20px', letterSpacing: '-0.15px', margin: 0 }}>
+          <p style={{ ...TEXT, fontSize: 13, fontWeight: 400, color: '#808080', lineHeight: '18px', letterSpacing: '-0.15px', margin: 0, marginBottom: 8 }}>
             Third-party data sources monitoring this borrower
           </p>
         </div>
 
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', rowGap: 16, columnGap: 16 }}>
           {EXTERNAL.map(card => <ExternalCard key={card.id} card={card} cardFlex={extCardFlex} />)}
         </div>
       </div>

@@ -50,10 +50,10 @@ function NavIconBtn({ icon, label, clickTooltip }) {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         style={{
-          width: 50, height: 50, cursor: 'pointer',
+          width: 38, height: 38, cursor: 'pointer',
           borderRadius: '50%',
-          background: hovered ? '#2871fa' : '#f8f7ff',
-          border: hovered ? 'none' : '0.3px solid #14397d',
+          background: hovered ? 'linear-gradient(116.96deg, #2871fa 0%, #6717cd 100%)' : '#ffffff',
+          border: hovered ? 'none' : '0.3px solid rgba(20,57,125,0.25)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           transition: 'background 0.15s, border 0.15s',
         }}
@@ -61,7 +61,7 @@ function NavIconBtn({ icon, label, clickTooltip }) {
         <img
           src={icon} alt={label || ''}
           style={{
-            width: 30, height: 30, objectFit: 'contain',
+            width: 20, height: 20, objectFit: 'contain',
             filter: hovered ? 'brightness(0) invert(1)' : 'none',
             transition: 'filter 0.15s',
           }}
@@ -88,19 +88,21 @@ function NotifyBtn({ compact }) {
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
           style={{
-            width: 44, height: 44, cursor: 'pointer',
+            width: 36, height: 36, cursor: 'pointer',
             borderRadius: '50%',
-            background: '#2871fa',
+            background: hovered ? 'linear-gradient(116.96deg, #2871fa 0%, #6717cd 100%)' : '#ffffff',
+            border: hovered ? 'none' : '0.3px solid rgba(20,57,125,0.25)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
+            transition: 'background 0.15s, border 0.15s',
           }}
         >
           <img
             src={imgNotification} alt="Alerts"
             style={{
-              width: 26, height: 26, objectFit: 'contain',
-              filter: 'brightness(0) invert(1)',
+              width: 20, height: 20, objectFit: 'contain',
+              filter: hovered ? 'brightness(0) invert(1)' : 'none',
               transform: hovered ? 'rotate(-20deg)' : 'rotate(0deg)',
-              transition: 'transform 0.2s ease',
+              transition: 'filter 0.15s, transform 0.2s ease',
             }}
           />
         </div>
@@ -118,30 +120,33 @@ function NotifyBtn({ compact }) {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         style={{
-          display: 'flex', alignItems: 'center', gap: 15,
-          height: 50, borderRadius: 100,
+          display: 'flex', alignItems: 'center', gap: 10,
+          height: 38, borderRadius: 100,
           background: '#f1f1ff',
-          paddingRight: 16, width: 100, cursor: 'pointer',
+          paddingRight: 12, width: 80, cursor: 'pointer',
+          transition: 'background 0.15s',
         }}
       >
         <div style={{
-          width: 50, height: 50, flexShrink: 0,
+          width: 38, height: 38, flexShrink: 0,
           borderRadius: '50%',
-          background: '#2871fa',
+          background: hovered ? 'linear-gradient(116.96deg, #2871fa 0%, #6717cd 100%)' : '#ffffff',
+          border: hovered ? 'none' : '0.3px solid rgba(20,57,125,0.25)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
+          transition: 'background 0.15s, border 0.15s',
         }}>
           <img
             src={imgNotification} alt="Alerts"
             style={{
-              width: 30, height: 30, objectFit: 'contain',
-              filter: 'brightness(0) invert(1)',
+              width: 20, height: 20, objectFit: 'contain',
+              filter: hovered ? 'brightness(0) invert(1)' : 'none',
               transform: hovered ? 'rotate(-20deg)' : 'rotate(0deg)',
-              transition: 'transform 0.2s ease',
+              transition: 'filter 0.15s, transform 0.2s ease',
             }}
           />
         </div>
         <span style={{
-          fontSize: 24, fontWeight: 400, lineHeight: '32px', letterSpacing: '0.07px',
+          fontSize: 16, fontWeight: 400, lineHeight: '24px', letterSpacing: '0.07px',
           color: '#081732',
         }}>0</span>
       </div>
@@ -177,11 +182,11 @@ function SearchBar({ onSelectBorrower }) {
     <div style={{ flex: 1, position: 'relative', minWidth: 0 }}>
       <div style={{
         display: 'flex', alignItems: 'center', gap: 12,
-        border: focused ? '0.5px solid #2871fa' : '0.5px solid #14397d',
-        borderRadius: 30, padding: isMobile ? '10px 18px' : '10px 30px',
-        background: '#fefdff', transition: 'border 0.15s',
+        border: focused ? '0.5px solid #2871fa' : '0.5px solid rgba(20,57,125,0.2)',
+        borderRadius: 30, padding: isMobile ? '0 18px' : '0 30px',
+        height: 38, background: '#fefdff', transition: 'border 0.15s',
       }}>
-        <img src={imgSearch} alt="" style={{ width: 24, height: 24, objectFit: 'contain', flexShrink: 0 }} />
+        <img src={imgSearch} alt="" style={{ width: 20, height: 20, objectFit: 'contain', flexShrink: 0, opacity: 0.5 }} />
         <input
           value={query}
           onChange={e => setQuery(e.target.value)}
@@ -218,28 +223,31 @@ function SearchBar({ onSelectBorrower }) {
               key={b.id}
               onMouseDown={() => handleSelect(b)}
               style={{
-                padding: '12px 20px', cursor: 'pointer',
+                padding: '10px 20px', cursor: 'pointer',
                 borderTop: i > 0 ? '0.3px solid rgba(20,57,125,0.1)' : 'none',
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
+                transition: 'background 0.15s',
               }}
-              onMouseEnter={e => e.currentTarget.style.background = 'rgba(40,113,250,0.06)'}
+              onMouseEnter={e => e.currentTarget.style.background = 'linear-gradient(116.96deg, rgba(40,113,250,0.07) 0%, rgba(103,23,205,0.05) 100%)'}
               onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
             >
               <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: 15, fontWeight: 600, color: '#081732', letterSpacing: '0.07px' }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#081732', letterSpacing: '0.07px', lineHeight: '18px' }}>
                   {b.name}
                 </div>
-                <div style={{ fontSize: 12, color: 'rgba(8,23,50,0.5)', letterSpacing: '-0.15px', marginTop: 2 }}>
+                <div style={{ fontSize: 12, color: 'rgba(8,23,50,0.62)', letterSpacing: '-0.15px', lineHeight: '18px', marginTop: 1 }}>
                   {b.id} · {b.industry}
                 </div>
               </div>
-              <span style={{
-                fontSize: 12, fontWeight: 700, color: '#fefdff', flexShrink: 0,
+              <div style={{
                 background: b.riskLevel === 'HIGH' ? '#e9000b' : b.riskLevel === 'LOW' ? '#05c04b' : '#d69200',
-                borderRadius: 30, padding: '2px 10px',
+                borderRadius: 30, padding: '1px 10px', minWidth: 57, flexShrink: 0,
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                {b.riskLevel}
-              </span>
+                <span style={{ fontSize: 8, fontWeight: 600, color: '#fefdff', lineHeight: '16px', textAlign: 'center' }}>
+                  {b.riskLevel}
+                </span>
+              </div>
             </div>
           ))}
         </div>
@@ -257,10 +265,10 @@ function HomeBtn({ onBack }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        width: 44, height: 44, flexShrink: 0, cursor: 'pointer',
+        width: 36, height: 36, flexShrink: 0, cursor: 'pointer',
         borderRadius: '50%',
-        background: hovered ? '#2871fa' : '#f8f7ff',
-        border: hovered ? 'none' : '0.3px solid #14397d',
+        background: hovered ? 'linear-gradient(116.96deg, #2871fa 0%, #6717cd 100%)' : '#ffffff',
+        border: hovered ? 'none' : '0.3px solid rgba(20,57,125,0.25)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         transition: 'background 0.15s, border 0.15s',
       }}
@@ -299,12 +307,13 @@ function ProfileBtn() {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         style={{
-          width: isMobile ? 44 : 50, height: isMobile ? 44 : 50,
-          borderRadius: '50%', overflow: 'hidden',
+          width: 38, height: 38, borderRadius: '50%', flexShrink: 0,
+          overflow: 'hidden',
           cursor: 'pointer',
-          outline: hovered || showDropdown ? '2px solid #2871fa' : '2px solid transparent',
-          outlineOffset: '2px',
-          transition: 'outline-color 0.15s',
+          boxShadow: hovered || showDropdown
+            ? '0 0 0 2px #f8f7ff, 0 0 0 4px #2871fa'
+            : 'none',
+          transition: 'box-shadow 0.15s',
         }}
       >
         <img src={imgProfile} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -319,13 +328,15 @@ function ProfileBtn() {
           boxShadow: '0 8px 32px rgba(20,57,125,0.16)',
           width: 280,
           zIndex: 1000,
-          overflow: 'hidden',
           fontFamily: 'Outfit, sans-serif',
+          overflow: 'visible',
         }}>
           <div style={{
             padding: '24px 24px 20px',
             background: 'linear-gradient(116.96deg, rgba(40,113,250,0.06) 0%, rgba(103,23,205,0.06) 100%)',
             display: 'flex', alignItems: 'center', gap: 14,
+            borderRadius: '24px 24px 0 0',
+            overflow: 'hidden',
           }}>
             <div style={{
               width: 52, height: 52, borderRadius: '50%', overflow: 'hidden', flexShrink: 0,
@@ -361,9 +372,65 @@ function ProfileBtn() {
 
           <div style={{ height: '0.5px', background: '#e1d1f5', margin: '0 24px' }} />
 
+          <div style={{ padding: '12px 0', display: 'flex', flexDirection: 'column' }}>
+            <ProfileMenuItem icon={
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#4a5565" strokeWidth="1.4"/><path d="M2 13c0-3.314 2.686-5 6-5s6 1.686 6 5" stroke="#4a5565" strokeWidth="1.4" strokeLinecap="round"/></svg>
+            } label="View profile" />
+            <ProfileMenuItem icon={
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="#4a5565" strokeWidth="1.4"/><path d="M8 1.5v1M8 13.5v1M1.5 8h1M13.5 8h1M3.4 3.4l.7.7M11.9 11.9l.7.7M11.9 4.1l-.7.7M4.1 11.9l-.7.7" stroke="#4a5565" strokeWidth="1.4" strokeLinecap="round"/></svg>
+            } label="Settings" />
+            <ProfileMenuItem icon={
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a4.5 4.5 0 014.5 4.5c0 2.5.8 3.5 1.5 4.5H2c.7-1 1.5-2 1.5-4.5A4.5 4.5 0 018 2z" stroke="#4a5565" strokeWidth="1.4" strokeLinejoin="round"/><path d="M6 11v.5a2 2 0 004 0V11" stroke="#4a5565" strokeWidth="1.4" strokeLinecap="round"/></svg>
+            } label="Notification preferences" />
+          </div>
+
+          <div style={{ height: '0.5px', background: '#e1d1f5', margin: '0 24px' }} />
+
           <div style={{ padding: '12px 24px 18px' }}>
             <SignOutBtn />
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ProfileMenuItem({ icon, label }) {
+  const [hovered, setHovered] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const ref = useRef(null);
+  useClickOutside(ref, showTooltip, () => setShowTooltip(false));
+
+  return (
+    <div ref={ref} style={{ position: 'relative' }}>
+      <div
+        onClick={() => setShowTooltip(s => !s)}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 12,
+          padding: '9px 24px', cursor: 'pointer',
+          background: hovered ? 'rgba(40,113,250,0.05)' : 'transparent',
+          transition: 'background 0.12s',
+        }}
+      >
+        <span style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>{icon}</span>
+        <span style={{ fontSize: 14, fontWeight: 400, color: '#081732', letterSpacing: '-0.1px', lineHeight: '20px', fontFamily: 'Outfit, sans-serif' }}>
+          {label}
+        </span>
+      </div>
+      {showTooltip && (
+        <div style={{
+          position: 'absolute', top: 'calc(100% + 6px)', left: '24px',
+          background: '#fefdff', border: '0.5px solid #e1d1f5',
+          borderRadius: 12, padding: '10px 18px',
+          boxShadow: '0 4px 24px rgba(20,57,125,0.14)',
+          fontSize: 13, fontWeight: 500, color: '#081732',
+          whiteSpace: 'nowrap', zIndex: 1100,
+          fontFamily: 'Outfit, sans-serif', letterSpacing: '0.07px',
+          pointerEvents: 'none',
+        }}>
+          Feature coming soon
         </div>
       )}
     </div>
@@ -385,34 +452,56 @@ function ProfileRow({ label, value }) {
 
 function SignOutBtn() {
   const [hovered, setHovered] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const ref = useRef(null);
+  useClickOutside(ref, showTooltip, () => setShowTooltip(false));
+
   return (
-    <button
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        width: '100%', padding: '10px 0',
-        background: hovered ? 'rgba(233,0,11,0.06)' : 'transparent',
-        border: `0.5px solid ${hovered ? 'rgba(233,0,11,0.2)' : '#e1d1f5'}`,
-        borderRadius: 12, cursor: 'pointer',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-        transition: 'background 0.15s, border 0.15s',
-        fontFamily: 'Outfit, sans-serif',
-      }}
-    >
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M6 14H3a1 1 0 01-1-1V3a1 1 0 011-1h3M10 11l3-3-3-3M13 8H6" stroke={hovered ? '#e9000b' : '#2871fa'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-      <span style={{ fontSize: 14, fontWeight: 600, color: hovered ? '#e9000b' : '#2871fa', transition: 'color 0.15s' }}>
-        Sign out
-      </span>
-    </button>
+    <div ref={ref} style={{ position: 'relative' }}>
+      <button
+        onClick={() => setShowTooltip(s => !s)}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          width: '100%', padding: '10px 0',
+          background: hovered ? 'rgba(233,0,11,0.06)' : 'transparent',
+          border: `0.5px solid ${hovered ? 'rgba(233,0,11,0.2)' : '#e1d1f5'}`,
+          borderRadius: 12, cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+          transition: 'background 0.15s, border 0.15s',
+          fontFamily: 'Outfit, sans-serif',
+        }}
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6 14H3a1 1 0 01-1-1V3a1 1 0 011-1h3M10 11l3-3-3-3M13 8H6" stroke={hovered ? '#e9000b' : '#2871fa'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <span style={{ fontSize: 14, fontWeight: 600, color: hovered ? '#e9000b' : '#2871fa', transition: 'color 0.15s' }}>
+          Sign Out
+        </span>
+      </button>
+      {showTooltip && (
+        <div style={{
+          position: 'absolute', bottom: 'calc(100% + 8px)', left: '50%',
+          transform: 'translateX(-50%)',
+          background: '#fefdff', border: '0.5px solid #e1d1f5',
+          borderRadius: 12, padding: '10px 18px',
+          boxShadow: '0 4px 24px rgba(20,57,125,0.14)',
+          fontSize: 13, fontWeight: 500, color: '#081732',
+          whiteSpace: 'nowrap', zIndex: 1100,
+          fontFamily: 'Outfit, sans-serif', letterSpacing: '0.07px',
+          pointerEvents: 'none',
+        }}>
+          Feature coming soon
+        </div>
+      )}
+    </div>
   );
 }
 
 function RiskLensLogo({ small }) {
   return (
     <div style={{ flexShrink: 0, userSelect: 'none' }}>
-      <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: small ? 20 : 26, fontWeight: 700, letterSpacing: '0.5px', lineHeight: 1 }}>
+      <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: small ? 17 : 21, fontWeight: 700, letterSpacing: '0.5px', lineHeight: 1 }}>
         <span style={{
           background: 'linear-gradient(116.96deg, #2871fa 30%, #6717cd 100%)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
@@ -452,8 +541,8 @@ export default function Navbar({ onSelectBorrower, onBack }) {
 
   return (
     <div style={{
-      display: 'flex', alignItems: 'center', gap: isTablet ? 16 : 24,
-      padding: isTablet ? '0 20px' : '0 30px', height: 90,
+      display: 'flex', alignItems: 'center', gap: isTablet ? 12 : 20,
+      padding: isTablet ? '0 16px' : '0 24px', height: 64,
       background: '#fefdff', borderBottom: '1px solid #e1d1f5',
       position: 'sticky', top: 0, zIndex: 100,
       width: '100%',

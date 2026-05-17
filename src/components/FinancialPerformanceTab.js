@@ -2,16 +2,17 @@ import { useState, useRef } from 'react';
 import { imgFPCheckCircle, imgFPAlertCircle } from '../assets/images';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 
-const CARD_BG = 'linear-gradient(114deg, rgba(40,113,250,0.05) 50.33%, rgba(103,23,205,0.05) 95.81%)';
+const CARD_BG  = '#fefdff';
+const INNER_BG = 'linear-gradient(114deg, rgba(40,113,250,0.05) 50.33%, rgba(103,23,205,0.05) 95.81%)';
 const QUARTERS = ['Q1 2025', 'Q2 2025', 'Q3 2025', 'Q4 2025', 'Q1 2026'];
 const Y_LABELS = [100, 75, 50, 25, 0];
 
-const W = 570, H = 375;
-const PAD_L = 32, PAD_R = 32, PAD_T = 16, PAD_B = 40;
+const W = 570, H = 324;
+const PAD_L = 52, PAD_R = 28, PAD_T = 10, PAD_B = 66;
 const chartW = W - PAD_L - PAD_R;
 const chartH = H - PAD_T - PAD_B;
-const BAR_W  = 51;
-const LABEL_X = PAD_L - 8;
+const BAR_W  = 46;
+const LABEL_X = PAD_L - 20;
 
 const slotW     = chartW / QUARTERS.length;
 const toSlotX   = i => PAD_L + slotW * (i + 0.5);
@@ -27,10 +28,15 @@ function smoothPath(pts) {
   if (pts.length < 2) return '';
   let d = `M ${pts[0][0]},${pts[0][1]}`;
   for (let i = 0; i < pts.length - 1; i++) {
-    const [x1, y1] = pts[i];
-    const [x2, y2] = pts[i + 1];
-    const dx = (x2 - x1) / 2.5;
-    d += ` C ${x1 + dx},${y1} ${x2 - dx},${y2} ${x2},${y2}`;
+    const p0 = pts[Math.max(0, i - 1)];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[Math.min(pts.length - 1, i + 2)];
+    const cp1x = p1[0] + (p2[0] - p0[0]) / 6;
+    const cp1y = p1[1] + (p2[1] - p0[1]) / 6;
+    const cp2x = p2[0] - (p3[0] - p1[0]) / 6;
+    const cp2y = p2[1] - (p3[1] - p1[1]) / 6;
+    d += ` C ${cp1x},${cp1y} ${cp2x},${cp2y} ${p2[0]},${p2[1]}`;
   }
   return d;
 }
@@ -46,24 +52,24 @@ function SvgGrid({ xFn }) {
     <>
       {Y_LABELS.map(v => (
         <line key={v} x1={PAD_L} x2={W - PAD_R} y1={toY(v)} y2={toY(v)}
-          stroke="rgba(165,165,170,0.4)" strokeWidth="0.5" />
+          stroke="rgba(165,165,170,0.75)" strokeWidth="0.5" />
       ))}
       {QUARTERS.map((_, i) => (
         <line key={i} x1={xFn(i)} x2={xFn(i)} y1={PAD_T} y2={toY(0)}
-          stroke="rgba(165,165,170,0.3)" strokeWidth="0.3" />
+          stroke="rgba(165,165,170,0.65)" strokeWidth="0.5" />
       ))}
       <line x1={PAD_L} x2={PAD_L} y1={PAD_T} y2={toY(0)}
         stroke="rgba(165,165,170,0.5)" strokeWidth="0.5" />
       {Y_LABELS.map(v => (
         <text key={v} x={LABEL_X} y={toY(v) + 5}
-          textAnchor="end" fontSize="14" fill="#081732"
+          textAnchor="end" fontSize="16" fill="#081732"
           fontFamily="Outfit, sans-serif" letterSpacing="-0.15">
           {v}
         </text>
       ))}
       {QUARTERS.map((q, i) => (
-        <text key={q} x={xFn(i)} y={H - 5}
-          textAnchor="middle" fontSize="14" fill="#081732"
+        <text key={q} x={xFn(i)} y={toY(0) + 44}
+          textAnchor="middle" fontSize="16" fill="#081732"
           fontFamily="Outfit, sans-serif" letterSpacing="-0.15">
           {q}
         </text>
@@ -84,7 +90,7 @@ function BarTooltip({ quarter, label, value, cssX, cssY, wrapperW }) {
       boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
       pointerEvents: 'none', zIndex: 20,
     }}>
-      <span style={{ fontSize: 8, fontWeight: 600, color: '#000', lineHeight: '16px', whiteSpace: 'nowrap' }}>
+      <span style={{ fontSize: 8, fontWeight: 600, color: '#808080', lineHeight: '16px', whiteSpace: 'nowrap' }}>
         {quarter}
       </span>
       <span style={{ fontSize: 14, fontWeight: 400, color: '#000', lineHeight: '20px', letterSpacing: '-0.15px', whiteSpace: 'nowrap' }}>
@@ -101,7 +107,7 @@ function LineTooltip({ quarter, label, value, stroke, cssX, cssY, wrapperW }) {
   return (
     <div style={{
       position: 'absolute', left, top, width: TW,
-      background: '#fefdff', borderRadius: 20, padding: '16px 20px',
+      background: '#fefdff', borderRadius: 8, padding: '12px 16px',
       display: 'flex', flexDirection: 'column', gap: 10,
       boxShadow: '0 4px 16px rgba(0,0,0,0.10)',
       pointerEvents: 'none', zIndex: 20,
@@ -241,13 +247,14 @@ function LineChartSVG({ data, stroke, tooltipLabel }) {
 function ChartCard({ title, metricLabel, metricValue, subtitle, sidePad = 25, children }) {
   return (
     <div style={{
-      flex: 1, minWidth: 0, borderRadius: 30,
-      padding: `40px ${sidePad}px`,
-      background: CARD_BG, display: 'flex', flexDirection: 'column', gap: 24,
+      flex: 1, minWidth: 0, borderRadius: 8,
+      padding: `18px ${sidePad}px`,
+      background: CARD_BG, border: '0.3px solid rgba(20,57,125,0.15)',
+      display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 30,
     }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 20, fontWeight: 600, color: '#101828', letterSpacing: '0.72px', lineHeight: '28px' }}>
+          <span style={{ fontSize: 15, fontWeight: 600, color: '#101828', letterSpacing: '0.3px', lineHeight: '22px' }}>
             {title}
           </span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
@@ -290,8 +297,8 @@ const RATIOS = [
 function RatioCard({ ratio, cardFlex }) {
   return (
     <div style={{
-      flex: cardFlex, minWidth: 0, background: '#fefdff', borderRadius: 20,
-      padding: '20px 25px', display: 'flex', flexDirection: 'column', gap: 10,
+      flex: cardFlex, minWidth: 0, background: '#F9F8FF', borderRadius: 8,
+      padding: '14px 18px', display: 'flex', flexDirection: 'column', gap: 6,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <span style={{ fontSize: 14, fontWeight: 400, color: '#4a5565', letterSpacing: '-0.15px', lineHeight: '20px' }}>
@@ -299,10 +306,10 @@ function RatioCard({ ratio, cardFlex }) {
         </span>
         {ratio.indicator && <span style={{ fontSize: 14 }}>{ratio.indicator}</span>}
       </div>
-      <span style={{ fontSize: 24, fontWeight: 600, color: '#101828', letterSpacing: '0.72px', lineHeight: '32px' }}>
+      <span style={{ fontSize: 18, fontWeight: 600, color: '#101828', letterSpacing: '0.3px', lineHeight: '24px' }}>
         {ratio.value}
       </span>
-      <span style={{ fontSize: 14, fontWeight: 600, color: '#808080', letterSpacing: '-0.1px', lineHeight: '20px', marginTop: 10 }}>
+      <span style={{ fontSize: 12, fontWeight: 600, color: '#808080', letterSpacing: '-0.1px', lineHeight: '18px', marginTop: 4 }}>
         {ratio.required}
       </span>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -316,39 +323,35 @@ function RatioCard({ ratio, cardFlex }) {
 }
 
 export default function FinancialPerformanceTab() {
-  const { isMobile, isTablet } = useBreakpoint();
+  const { isMobile, isTablet, isDesktop } = useBreakpoint();
   const isStacked = isMobile || isTablet;
   const ratioFlex = isMobile ? '0 0 100%' : isTablet ? '0 0 calc(50% - 8px)' : '1 0 0';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-      {/* Bar charts */}
-      <div style={{ display: 'flex', flexDirection: isStacked ? 'column' : 'row', gap: 20 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {/* All 4 chart cards in one row on desktop, 2×2 on tablet, stacked on mobile */}
+      <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', flexWrap: isTablet ? 'wrap' : 'nowrap', gap: 16 }}>
         <ChartCard
           title="Revenue Trend"
           metricLabel="Period Change" metricValue="-8.7%"
           subtitle="Declining revenue signals weakening business fundamentals"
-          sidePad={isStacked ? 20 : 40}
+          sidePad={isDesktop ? 20 : 16}
         >
           <BarChartSVG data={REVENUE_DATA} gradId="revBarGrad" tooltipLabel="Revenue" />
         </ChartCard>
         <ChartCard
-          title="Operating Cash Flow (Quarterly)"
+          title="Operating Cash Flow"
           metricLabel="Period Change" metricValue="-22.1%"
           subtitle="Volatile cash flow indicates operational stress"
-          sidePad={isStacked ? 20 : 40}
+          sidePad={isDesktop ? 20 : 16}
         >
           <BarChartSVG data={CASHFLOW_DATA} gradId="cfBarGrad" tooltipLabel="Cash Flow" />
         </ChartCard>
-      </div>
-
-      {/* Line charts */}
-      <div style={{ display: 'flex', flexDirection: isStacked ? 'column' : 'row', gap: 20 }}>
         <ChartCard
           title="Debt Levels"
           metricLabel="D/EBITDA:" metricValue="61%"
           subtitle="Rising debt-to-EBITDA approaches covenant breach at 3.5x"
-          sidePad={isStacked ? 20 : 40}
+          sidePad={isDesktop ? 20 : 16}
         >
           <LineChartSVG data={DEBT_DATA} stroke="#1a2a4a" tooltipLabel="Debt" />
         </ChartCard>
@@ -356,7 +359,7 @@ export default function FinancialPerformanceTab() {
           title="Liquidity Trend"
           metricLabel="Current Ratio" metricValue="1.12x"
           subtitle="Current ratio below 1.5x indicates thin liquidity cushion"
-          sidePad={isStacked ? 20 : 40}
+          sidePad={isDesktop ? 20 : 16}
         >
           <LineChartSVG data={LIQUIDITY_DATA} stroke="#6717cd" tooltipLabel="Liquidity" />
         </ChartCard>
@@ -364,13 +367,14 @@ export default function FinancialPerformanceTab() {
 
       {/* Key Financial Ratios */}
       <div style={{
-        borderRadius: 30, padding: '30px 25px 20px',
-        background: CARD_BG, display: 'flex', flexDirection: 'column', gap: 25,
+        borderRadius: 8, padding: '16px 16px 14px',
+        background: CARD_BG, border: '0.3px solid rgba(20,57,125,0.15)',
+        display: 'flex', flexDirection: 'column', gap: 16,
       }}>
-        <span style={{ fontSize: 24, fontWeight: 600, color: '#101828', letterSpacing: '0.72px', lineHeight: '32px' }}>
+        <span style={{ fontSize: 16, fontWeight: 600, color: '#101828', letterSpacing: '0.3px', lineHeight: '22px' }}>
           Key Financial Ratios
         </span>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', rowGap: 16, columnGap: 16 }}>
           {RATIOS.map(r => <RatioCard key={r.label} ratio={r} cardFlex={ratioFlex} />)}
         </div>
       </div>

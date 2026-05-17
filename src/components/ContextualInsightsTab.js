@@ -1,20 +1,19 @@
 import { useState, useRef, useEffect } from 'react';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 import {
-  imgExtLinkUp, imgXCircleRed,
+  imgExtLinkUpGradient, imgXCircleRed,
   imgCIAvatar1, imgCIAvatar2,
-  imgCIDocPdf, imgCIDocBank, imgCIDocLoan, imgCIDownload,
+  imgCIDocPdf, imgCIDocBank, imgCIDocLoan, imgCIDownloadGradient,
   imgProfile,
 } from '../assets/images';
 
 const TEXT          = { fontFamily: 'Outfit, sans-serif' };
-const CARD_BG       = 'linear-gradient(117.9deg, rgba(40,113,250,0.05) 50.33%, rgba(103,23,205,0.05) 95.81%)';
-const BLUE_FILTER   = 'invert(30%) sepia(100%) saturate(2000%) hue-rotate(210deg) brightness(100%)';
-const PURPLE_FILTER = 'invert(25%) sepia(100%) saturate(2500%) hue-rotate(260deg) brightness(90%)';
+const CARD_BG       = '#fefdff';
+const INNER_BG      = '#F9F8FF';
 
 // ── Chart geometry ────────────────────────────────────────────────
-const W = 780, H = 580;
-const PAD_L = 45, PAD_R = 15, PAD_T = 20, PAD_B = 120;
+const W = 780, H = 320;
+const PAD_L = 45, PAD_R = 15, PAD_T = 16, PAD_B = 100;
 const chartW = W - PAD_L - PAD_R;
 const chartH = H - PAD_T - PAD_B;
 const Y_LABELS = [100, 75, 50, 25, 0];
@@ -115,11 +114,11 @@ function Divider() {
 function BreachBadge() {
   return (
     <div style={{
-      background: 'rgba(233,0,11,0.1)', borderRadius: 30, padding: '3px 12px',
+      background: '#e9000b', borderRadius: 30, padding: '1px 10px',
       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-      alignSelf: 'flex-start',
+      alignSelf: 'flex-start', minWidth: 57,
     }}>
-      <span style={{ ...TEXT, fontSize: 12, fontWeight: 600, color: '#e9000b', lineHeight: '18px' }}>
+      <span style={{ ...TEXT, fontSize: 8, fontWeight: 600, color: '#fefdff', lineHeight: '16px', textAlign: 'center' }}>
         BREACH
       </span>
     </div>
@@ -131,68 +130,65 @@ function CovenantCard({ cov, cardFlex }) {
   return (
     <div style={{
       flex: cardFlex || '1 1 0', minWidth: 0, overflow: 'hidden',
-      background: '#fefdff', border: '1px solid rgba(8,23,50,0.12)',
-      borderRadius: 30, padding: '20px 25px',
-      display: 'flex', flexDirection: 'column', gap: 16,
+      background: INNER_BG, border: '0.3px solid rgba(20,57,125,0.15)',
+      borderRadius: 8, padding: '12px 14px',
+      display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
       boxSizing: 'border-box',
     }}>
       {/* Top section */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {/* Row 1: BREACH badge only */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingBottom: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <BreachBadge />
-          {/* Row 2: Covenant name */}
           <span style={{ ...TEXT, fontSize: 14, fontWeight: 600, color: '#101828', lineHeight: '18px', marginTop: 10 }}>
             {cov.name}
           </span>
-          {/* Current value */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4, margin: '6px 0' }}>
             <span style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#808080', lineHeight: '18px' }}>
               Current Value
             </span>
-            <span style={{ ...TEXT, fontSize: 24, fontWeight: 600, color: '#101828', lineHeight: '32px', letterSpacing: '0.72px' }}>
+            <span style={{ ...TEXT, fontSize: 18, fontWeight: 600, color: '#101828', lineHeight: '24px', letterSpacing: '0.3px' }}>
               {cov.current}
             </span>
           </div>
         </div>
         {/* Delta + required */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          {/* X icon + 8px gap + delta text on same row */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <img src={imgXCircleRed} alt="" style={{ width: 14, height: 14, flexShrink: 0 }} />
             <span style={{ ...TEXT, fontSize: 14, fontWeight: 700, color: '#6b7280', lineHeight: '18px' }}>
               {cov.delta}
             </span>
           </div>
-          <span style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#808080', lineHeight: '18px' }}>
+          <span style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#808080', lineHeight: '18px', paddingBottom: 12 }}>
             {cov.required}
           </span>
         </div>
       </div>
 
-      <Divider />
-
-      {/* Footer */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 6 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 0 }}>
-          <span style={{ ...TEXT, fontSize: 14, fontWeight: 600, color: '#a5a5aa', lineHeight: '18px' }}>
-            Breached since: {cov.since}
-          </span>
-          <span style={{ ...TEXT, fontSize: 14, fontWeight: 600, color: '#a5a5aa', lineHeight: '18px' }}>
-            In breach for {cov.months}
-          </span>
+      {/* Bottom — always at card bottom */}
+      <div>
+        <Divider />
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 6, marginTop: 12 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 0 }}>
+            <span style={{ ...TEXT, fontSize: 14, fontWeight: 600, color: '#a5a5aa', lineHeight: '18px' }}>
+              Breached since: {cov.since}
+            </span>
+            <span style={{ ...TEXT, fontSize: 14, fontWeight: 600, color: '#a5a5aa', lineHeight: '18px' }}>
+              In breach for {cov.months}
+            </span>
+          </div>
+          <img
+            src={imgExtLinkUpGradient} alt=""
+            onMouseEnter={() => setLinkHovered(true)}
+            onMouseLeave={() => setLinkHovered(false)}
+            style={{
+              width: 20, height: 20, objectFit: 'contain', transform: 'rotate(45deg)', flexShrink: 0,
+              opacity: linkHovered ? 0.75 : 1,
+              cursor: 'pointer', transition: 'opacity 0.15s',
+              marginTop: 1,
+            }}
+          />
         </div>
-        <img
-          src={imgExtLinkUp} alt=""
-          onMouseEnter={() => setLinkHovered(true)}
-          onMouseLeave={() => setLinkHovered(false)}
-          style={{
-            width: 20, height: 20, objectFit: 'contain', transform: 'rotate(45deg)', flexShrink: 0,
-            filter: linkHovered ? PURPLE_FILTER : BLUE_FILTER,
-            cursor: 'pointer', transition: 'filter 0.2s ease',
-            marginTop: 1,
-          }}
-        />
       </div>
     </div>
   );
@@ -202,12 +198,12 @@ function CovenantTrackingCard() {
   const { isMobile, isTablet } = useBreakpoint();
   const cardFlex = isMobile ? '0 0 100%' : isTablet ? '0 0 calc(50% - 8px)' : '1 1 0';
   return (
-    <div style={{ borderRadius: 30, padding: '30px 25px', background: CARD_BG, display: 'flex', flexDirection: 'column', gap: 28 }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <span style={{ ...TEXT, fontSize: 24, fontWeight: 600, color: '#101828', lineHeight: '32px', letterSpacing: '0.72px' }}>
+    <div style={{ borderRadius: 8, padding: '16px', background: CARD_BG, border: '0.3px solid rgba(20,57,125,0.15)', display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <span style={{ ...TEXT, fontSize: 16, fontWeight: 600, color: '#101828', lineHeight: '22px', letterSpacing: '0.3px' }}>
           Covenant Tracking
         </span>
-        <span style={{ ...TEXT, fontSize: 16, fontWeight: 400, color: '#808080', lineHeight: '20px', letterSpacing: '0.07px' }}>
+        <span style={{ ...TEXT, fontSize: 13, fontWeight: 400, color: '#808080', lineHeight: '18px', letterSpacing: '0.07px' }}>
           4 of 4 covenants in breach — critical attention required
         </span>
       </div>
@@ -245,7 +241,7 @@ function ChartTooltip({ quarter, series, cssX, cssY, wrapperW }) {
   return (
     <div style={{
       position: 'absolute', left, top, width: TW,
-      background: '#fefdff', borderRadius: 20, padding: '16px 20px',
+      background: '#fefdff', borderRadius: 8, padding: '12px 14px',
       display: 'flex', flexDirection: 'column', gap: 10,
       boxShadow: '0 4px 16px rgba(0,0,0,0.10)',
       pointerEvents: 'none', zIndex: 20,
@@ -302,15 +298,15 @@ function HistoricalPerformanceCard() {
   };
 
   return (
-    <div style={{ borderRadius: 30, padding: '30px 25px', background: CARD_BG, display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div style={{ borderRadius: 8, padding: '16px', background: CARD_BG, border: '0.3px solid rgba(20,57,125,0.15)', display: 'flex', flexDirection: 'column', gap: 16 }}>
 
       {/* Header + period toggle */}
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <span style={{ ...TEXT, fontSize: 24, fontWeight: 500, color: '#101828', lineHeight: '32px' }}>
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <span style={{ ...TEXT, fontSize: 16, fontWeight: 600, color: '#101828', lineHeight: '22px' }}>
             Historical Performance
           </span>
-          <span style={{ ...TEXT, fontSize: 16, fontWeight: 400, color: '#808080', lineHeight: '16px', letterSpacing: '0.07px', paddingBottom: 14 }}>
+          <span style={{ ...TEXT, fontSize: 13, fontWeight: 400, color: '#808080', lineHeight: '18px', letterSpacing: '0.07px', display: 'block', marginBottom: 12 }}>
             Risk score and key drivers over 12 quarters
           </span>
         </div>
@@ -352,7 +348,7 @@ function HistoricalPerformanceCard() {
               opacity: visibleSeries.has(label) ? 1 : 0.25, transition: 'opacity 0.15s ease',
             }} />
             <span style={{
-              ...TEXT, fontSize: 16, fontWeight: 400, lineHeight: '16px', letterSpacing: '0.07px', whiteSpace: 'nowrap',
+              ...TEXT, fontSize: 13, fontWeight: 400, lineHeight: '16px', letterSpacing: '0.07px', whiteSpace: 'nowrap',
               color: visibleSeries.has(label) ? '#101828' : '#b0b0b0',
               transition: 'color 0.15s ease',
             }}>
@@ -379,8 +375,8 @@ function HistoricalPerformanceCard() {
 
           {/* Y-axis labels — dominantBaseline centers text on the grid line */}
           {Y_LABELS.map(v => (
-            <text key={v} x={PAD_L - 8} y={toY(v)}
-              textAnchor="end" fontSize="12" fill="#101828" fontFamily="Outfit, sans-serif"
+            <text key={v} x={PAD_L - 16} y={toY(v)}
+              textAnchor="end" fontSize="9" fill="#101828" fontFamily="Outfit, sans-serif"
               dominantBaseline="middle">
               {v}
             </text>
@@ -399,8 +395,8 @@ function HistoricalPerformanceCard() {
 
           {/* X-axis labels */}
           {QUARTERS.map((q, i) => (
-            <text key={q} x={toX(i)} y={PAD_T + chartH + 20}
-              textAnchor="middle" fontSize="12" fill="#101828" fontFamily="Outfit, sans-serif"
+            <text key={q} x={toX(i)} y={PAD_T + chartH + 24}
+              textAnchor="middle" fontSize="9" fill="#101828" fontFamily="Outfit, sans-serif"
               dominantBaseline="hanging">
               {q}
             </text>
@@ -447,14 +443,14 @@ function HistoricalPerformanceCard() {
 
           {EVENTS.map(({ idx, line1, line2 }) => {
             const x = toX(idx);
-            const yBase = PAD_T + chartH + 44;
+            const yBase = PAD_T + chartH + 60;
             return (
               <g key={line1}>
                 <polygon points={`${x - 4},${yBase} ${x + 4},${yBase} ${x},${yBase - 7}`} fill="#808080" />
-                <text x={x} y={yBase + 16} textAnchor="middle" fontSize="13" fill="#808080" fontFamily="Outfit, sans-serif">
+                <text x={x} y={yBase + 12} textAnchor="middle" fontSize="9" fill="#808080" fontFamily="Outfit, sans-serif">
                   {line1}
                 </text>
-                <text x={x} y={yBase + 32} textAnchor="middle" fontSize="13" fill="#808080" fontFamily="Outfit, sans-serif">
+                <text x={x} y={yBase + 24} textAnchor="middle" fontSize="9" fill="#808080" fontFamily="Outfit, sans-serif">
                   {line2}
                 </text>
               </g>
@@ -502,7 +498,7 @@ function NoteEditPanel({ initialText, onSave, onCancel }) {
   const ref = useRef(null);
   useEffect(() => { if (ref.current) ref.current.focus(); }, []);
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <textarea
         ref={ref}
         value={text}
@@ -553,17 +549,26 @@ function ReviewNote({ note, onEdit, onDelete }) {
   const [editHovered, setEditHovered] = useState(false);
   const [deleteHovered, setDeleteHovered] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showReply, setShowReply] = useState(false);
+  const [replyText, setReplyText] = useState('');
+  const [replyCancelHovered, setReplyCancelHovered] = useState(false);
+  const [replySubmitHovered, setReplySubmitHovered] = useState(false);
+  const replyRef = useRef(null);
+
+  useEffect(() => {
+    if (showReply && replyRef.current) replyRef.current.focus();
+  }, [showReply]);
 
   const rawText = note.text.replace(/^"|"$/g, '');
 
   return (
-    <div style={{ background: '#fefdff', borderRadius: 30, padding: '22px 25px' }}>
+    <div style={{ background: INNER_BG, borderRadius: 8, padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 16 }}>
       <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
         <img src={note.avatar} alt="" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
-        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <span style={{ ...TEXT, fontSize: 20, fontWeight: 400, color: '#101828', lineHeight: '26px', letterSpacing: '0.07px' }}>
+              <span style={{ ...TEXT, fontSize: 15, fontWeight: 600, color: '#101828', lineHeight: '20px', letterSpacing: '0.07px' }}>
                 {note.name}
               </span>
               <span style={{ ...TEXT, fontSize: 15, fontWeight: 600, color: '#4a5565', lineHeight: '20px' }}>
@@ -582,7 +587,7 @@ function ReviewNote({ note, onEdit, onDelete }) {
               onCancel={() => setIsEditing(false)}
             />
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <span style={{ ...TEXT, fontSize: 16, fontWeight: 400, color: '#364153', lineHeight: '26px' }}>
                 {note.text}
               </span>
@@ -593,10 +598,11 @@ function ReviewNote({ note, onEdit, onDelete }) {
                     onMouseEnter={() => setEditHovered(true)}
                     onMouseLeave={() => setEditHovered(false)}
                     style={{
-                      background: 'none', border: 'none', cursor: 'pointer', padding: '2px 6px',
+                      border: 'none', cursor: 'pointer', padding: '2px 6px',
                       ...TEXT, fontSize: 14, fontWeight: 600, lineHeight: '20px',
-                      color: editHovered ? '#1a60e8' : '#2871fa',
-                      transition: 'color 0.15s',
+                      background: 'linear-gradient(90deg, #2871fa 0%, #6717cd 100%)',
+                      WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+                      opacity: editHovered ? 0.8 : 1, transition: 'opacity 0.15s',
                     }}
                   >Edit</button>
                   <span style={{ color: '#e1d1f5', fontSize: 14 }}>|</span>
@@ -605,29 +611,108 @@ function ReviewNote({ note, onEdit, onDelete }) {
                     onMouseEnter={() => setDeleteHovered(true)}
                     onMouseLeave={() => setDeleteHovered(false)}
                     style={{
-                      background: 'none', border: 'none', cursor: 'pointer', padding: '2px 6px',
+                      border: 'none', cursor: 'pointer', padding: '2px 6px',
                       ...TEXT, fontSize: 14, fontWeight: 600, lineHeight: '20px',
-                      color: deleteHovered ? '#b00008' : '#e9000b',
-                      transition: 'color 0.15s',
+                      background: 'linear-gradient(90deg, #2871fa 0%, #6717cd 100%)',
+                      WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+                      opacity: deleteHovered ? 0.8 : 1, transition: 'opacity 0.15s',
                     }}
                   >Delete</button>
                 </div>
               ) : (
                 <button
+                  onClick={() => setShowReply(s => !s)}
                   onMouseEnter={() => setReplyHovered(true)}
                   onMouseLeave={() => setReplyHovered(false)}
                   style={{
-                    background: 'none', border: 'none', cursor: 'pointer', padding: 0, alignSelf: 'flex-start',
+                    border: 'none', cursor: 'pointer', padding: 0, alignSelf: 'flex-start',
                     ...TEXT, fontSize: 14, fontWeight: 600, lineHeight: '20px',
-                    color: replyHovered ? '#6717cd' : '#2871fa',
-                    transition: 'color 0.2s ease',
+                    background: 'linear-gradient(90deg, #2871fa 0%, #6717cd 100%)',
+                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+                    opacity: replyHovered ? 0.75 : 1, transition: 'opacity 0.15s',
                   }}
-                >Reply</button>
+                >{showReply ? 'Cancel' : 'Reply'}</button>
               )}
             </div>
           )}
         </div>
       </div>
+
+      {/* Reply panel */}
+      {showReply && (
+        <div style={{
+          background: '#fefdff', border: '0.5px solid #e1d1f5',
+          borderRadius: 8, padding: '14px', marginLeft: 56,
+          display: 'flex', flexDirection: 'column', gap: 16,
+          boxShadow: '0 2px 12px rgba(20,57,125,0.08)',
+        }}>
+          {/* Replying to context */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ ...TEXT, fontSize: 12, fontWeight: 400, color: '#a5a5aa', lineHeight: '16px' }}>
+              Replying to
+            </span>
+            <img src={note.avatar} alt="" style={{ width: 18, height: 18, borderRadius: '50%', objectFit: 'cover' }} />
+            <span style={{ ...TEXT, fontSize: 12, fontWeight: 600, color: '#4a5565', lineHeight: '16px' }}>
+              {note.name}
+            </span>
+          </div>
+
+          {/* Author row */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <img src={imgProfile} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '1px solid #e1d1f5' }} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <span style={{ ...TEXT, fontSize: 14, fontWeight: 600, color: '#101828', lineHeight: '18px' }}>Adam Johnson</span>
+              <span style={{ ...TEXT, fontSize: 12, fontWeight: 400, color: '#808080', lineHeight: '16px' }}>Senior Risk Analyst</span>
+            </div>
+          </div>
+
+          {/* Textarea */}
+          <textarea
+            ref={replyRef}
+            value={replyText}
+            onChange={e => setReplyText(e.target.value)}
+            placeholder="Write your reply..."
+            onFocus={e => e.target.style.borderColor = '#2871fa'}
+            onBlur={e => e.target.style.borderColor = '#e1d1f5'}
+            style={{
+              width: '100%', minHeight: 80,
+              border: '0.5px solid #e1d1f5', borderRadius: 12, padding: '12px 14px',
+              fontFamily: 'Outfit, sans-serif', fontSize: 14, fontWeight: 400,
+              color: '#101828', lineHeight: '22px', resize: 'vertical',
+              outline: 'none', background: '#fefdff', boxSizing: 'border-box',
+              transition: 'border-color 0.15s',
+            }}
+          />
+
+          {/* Action buttons */}
+          <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+            <button
+              onClick={() => { setShowReply(false); setReplyText(''); }}
+              onMouseEnter={() => setReplyCancelHovered(true)}
+              onMouseLeave={() => setReplyCancelHovered(false)}
+              style={{
+                ...TEXT, padding: '8px 18px',
+                background: replyCancelHovered ? 'rgba(8,23,50,0.06)' : 'transparent',
+                border: '0.5px solid #e1d1f5', borderRadius: 30, cursor: 'pointer',
+                fontSize: 13, fontWeight: 600, color: '#4a5565', transition: 'background 0.15s',
+              }}
+            >Cancel</button>
+            <button
+              onClick={() => { if (replyText.trim()) { setShowReply(false); setReplyText(''); } }}
+              onMouseEnter={() => setReplySubmitHovered(true)}
+              onMouseLeave={() => setReplySubmitHovered(false)}
+              style={{
+                ...TEXT, padding: '8px 18px',
+                background: 'linear-gradient(116.96deg, #2871fa 0%, #6717cd 100%)',
+                border: 'none', borderRadius: 30, cursor: 'pointer',
+                fontSize: 13, fontWeight: 600, color: '#fefdff',
+                opacity: replyText.trim() ? (replySubmitHovered ? 0.8 : 1) : 0.5,
+                transition: 'opacity 0.15s',
+              }}
+            >Reply</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -678,11 +763,11 @@ function ReviewNotesCard() {
   };
 
   return (
-    <div style={{ borderRadius: 30, padding: '30px 25px', background: CARD_BG, display: 'flex', flexDirection: 'column', gap: 20 }}>
+    <div style={{ borderRadius: 8, padding: '16px', background: CARD_BG, border: '0.3px solid rgba(20,57,125,0.15)', display: 'flex', flexDirection: 'column', gap: 16 }}>
 
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ ...TEXT, fontSize: 24, fontWeight: 600, color: '#101828', lineHeight: '32px', letterSpacing: '0.72px' }}>
+        <span style={{ ...TEXT, fontSize: 16, fontWeight: 600, color: '#101828', lineHeight: '22px', letterSpacing: '0.3px' }}>
           Latest Review Notes
         </span>
         <button
@@ -690,24 +775,19 @@ function ReviewNotesCard() {
           onMouseEnter={() => setPlusHovered(true)}
           onMouseLeave={() => setPlusHovered(false)}
           style={{
-            background: showInput || plusHovered
-              ? '#2871fa'
-              : 'linear-gradient(180deg, rgba(40,113,250,0.1) 0%, rgba(103,23,205,0.1) 100%)',
-            borderRadius: '50%', width: 36, height: 36, padding: 0,
-            border: 'none', cursor: 'pointer', flexShrink: 0,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            transition: 'background 0.2s ease',
+            ...TEXT,
+            background: showInput ? 'rgba(233,0,11,0.06)' : 'linear-gradient(116.96deg, #2871fa 0%, #6717cd 100%)',
+            border: showInput ? '0.5px solid rgba(233,0,11,0.2)' : 'none',
+            borderRadius: 8, padding: '6px 14px',
+            cursor: 'pointer', flexShrink: 0,
+            display: 'flex', alignItems: 'center', gap: 6,
+            fontSize: 13, fontWeight: 600,
+            color: showInput ? '#e9000b' : '#fefdff',
+            opacity: !showInput && plusHovered ? 0.8 : 1,
+            transition: 'opacity 0.15s, background 0.15s, color 0.15s, border 0.15s',
           }}
         >
-          <span style={{
-            ...TEXT, fontSize: showInput ? 26 : 22, fontWeight: 600, lineHeight: '32px',
-            color: showInput || plusHovered ? '#fff' : '#101828',
-            transform: showInput ? 'rotate(45deg)' : 'none',
-            display: 'inline-block',
-            transition: 'all 0.2s ease',
-          }}>
-            +
-          </span>
+          {showInput ? 'Cancel' : '+ Add Note'}
         </button>
       </div>
 
@@ -716,8 +796,8 @@ function ReviewNotesCard() {
         <div style={{
           background: '#fefdff',
           border: '0.5px solid #e1d1f5',
-          borderRadius: 20,
-          padding: '20px',
+          borderRadius: 8,
+          padding: '14px',
           display: 'flex', flexDirection: 'column', gap: 16,
           boxShadow: '0 2px 12px rgba(20,57,125,0.08)',
         }}>
@@ -782,13 +862,13 @@ function ReviewNotesCard() {
               onMouseLeave={() => setAddHovered(false)}
               style={{
                 ...TEXT, padding: '8px 18px',
-                background: addHovered ? '#1a60e8' : '#2871fa',
+                background: 'linear-gradient(116.96deg, #2871fa 0%, #6717cd 100%)',
                 border: 'none',
                 borderRadius: 30, cursor: 'pointer',
                 fontSize: 13, fontWeight: 600,
                 color: '#fefdff',
-                transition: 'background 0.15s',
-                opacity: noteText.trim() ? 1 : 0.5,
+                opacity: noteText.trim() ? (addHovered ? 0.8 : 1) : 0.5,
+                transition: 'opacity 0.15s',
               }}
             >
               Add Note
@@ -826,16 +906,16 @@ function DocumentRow({ doc, showTooltip, onToggle }) {
       <div
         onClick={onToggle}
         style={{
-          background: '#fefdff',
-          border: '0.3px solid #14397d',
-          borderRadius: 30, padding: '20px 25px',
+          background: INNER_BG,
+          border: '0.3px solid rgba(20,57,125,0.15)',
+          borderRadius: 8, padding: '12px 14px',
           cursor: 'pointer',
         }}
       >
-      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+      <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
         <img src={doc.icon} alt="" style={{ width: 28, height: 28, objectFit: 'contain', opacity: 0.75, flexShrink: 0 }} />
         <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <span style={{ ...TEXT, fontSize: 18, fontWeight: 400, color: '#101828', lineHeight: '22px', letterSpacing: '0.07px' }}>
+          <span style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#101828', lineHeight: '20px', letterSpacing: '0.07px' }}>
             {doc.name}
           </span>
           <span style={{ ...TEXT, fontSize: 14, fontWeight: 400, color: '#364153', lineHeight: '18px' }}>
@@ -843,13 +923,13 @@ function DocumentRow({ doc, showTooltip, onToggle }) {
           </span>
         </div>
         <img
-          src={imgCIDownload} alt="Download"
+          src={imgCIDownloadGradient} alt="Download"
           onMouseEnter={() => setDlHovered(true)}
           onMouseLeave={() => setDlHovered(false)}
           style={{
             width: 22, height: 22, objectFit: 'contain', flexShrink: 0,
-            filter: dlHovered ? PURPLE_FILTER : BLUE_FILTER,
-            cursor: 'pointer', transition: 'filter 0.2s ease',
+            opacity: dlHovered ? 0.75 : 1,
+            cursor: 'pointer', transition: 'opacity 0.15s',
           }}
         />
       </div>
@@ -880,8 +960,8 @@ function DocumentRow({ doc, showTooltip, onToggle }) {
 function SupportingDocumentsCard() {
   const [openIdx, setOpenIdx] = useState(null);
   return (
-    <div style={{ borderRadius: 30, padding: '30px 25px', background: CARD_BG, display: 'flex', flexDirection: 'column', gap: 20 }}>
-      <span style={{ ...TEXT, fontSize: 24, fontWeight: 600, color: '#101828', lineHeight: '32px', letterSpacing: '0.72px' }}>
+    <div style={{ borderRadius: 8, padding: '16px', background: CARD_BG, border: '0.3px solid rgba(20,57,125,0.15)', display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <span style={{ ...TEXT, fontSize: 16, fontWeight: 600, color: '#101828', lineHeight: '22px', letterSpacing: '0.3px' }}>
         Supporting Documents
       </span>
       {DOCS.map((doc, i) => (
@@ -904,17 +984,17 @@ export default function ContextualInsightsTab() {
   const isStacked = isMobile || isTablet;
 
   return (
-    <div style={{ display: 'flex', flexDirection: isStacked ? 'column' : 'row', gap: 20, alignItems: 'flex-start' }}>
+    <div style={{ display: 'flex', flexDirection: isStacked ? 'column' : 'row', gap: 16, alignItems: 'flex-start' }}>
       {/* Left column */}
-      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
         <CovenantTrackingCard />
         <HistoricalPerformanceCard />
       </div>
       {/* Right column */}
       <div style={{
-        flex: isStacked ? 'none' : '0 0 calc(30% - 10px)',
+        flex: isStacked ? 'none' : '0 0 calc(25% - 12px)',
         width: isStacked ? '100%' : undefined,
-        display: 'flex', flexDirection: 'column', gap: 20,
+        display: 'flex', flexDirection: 'column', gap: 16,
       }}>
         <ReviewNotesCard />
         <SupportingDocumentsCard />

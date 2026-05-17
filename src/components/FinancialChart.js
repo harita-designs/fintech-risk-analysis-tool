@@ -1,12 +1,11 @@
 import { useState, useRef } from 'react';
-import { imgDotRevenue, imgDotCashFlow, imgDotDebt, imgDotDark } from '../assets/images';
 
 const W      = 756;
-const H      = 545;
+const H      = 260;
 const PAD_L  = 32;
 const PAD_R  = 32;
-const PAD_T  = 16;
-const PAD_B  = 45;
+const PAD_T  = 12;
+const PAD_B  = 30;
 const chartW = W - PAD_L - PAD_R;
 const chartH = H - PAD_T - PAD_B;
 
@@ -32,9 +31,9 @@ function smoothPath(pts) {
 }
 
 const SERIES = [
-  { key: 'revenue',  label: 'Revenue',   legendDot: imgDotRevenue,  lineDot: imgDotDark,    stroke: '#1a2a4a' },
-  { key: 'cashFlow', label: 'Cash Flow', legendDot: imgDotCashFlow, lineDot: imgDotCashFlow, stroke: '#6717cd' },
-  { key: 'debt',     label: 'Debt',      legendDot: imgDotDebt,     lineDot: imgDotDebt,     stroke: '#b38be6' },
+  { key: 'revenue',  label: 'Revenue',   stroke: '#1a2a4a' },
+  { key: 'cashFlow', label: 'Cash Flow', stroke: '#6717cd' },
+  { key: 'debt',     label: 'Debt',      stroke: '#b38be6' },
 ];
 
 const TOOLTIP_W = 160;
@@ -73,19 +72,21 @@ export default function FinancialChart({ data }) {
 
   return (
     <div style={{
-      background: 'linear-gradient(113.65deg, rgba(40,113,250,0.05) 50.33%, rgba(103,23,205,0.05) 95.81%)',
-      borderRadius: 30, padding: '50px 30px', display: 'flex', flexDirection: 'column', gap: 50,
+      background: '#fefdff',
+      border: '0.3px solid rgba(20,57,125,0.15)',
+      borderRadius: 8, padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: 12,
+      height: '100%', boxSizing: 'border-box',
     }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: 24, fontWeight: 600, color: '#081732', letterSpacing: '0.72px', lineHeight: '32px' }}>
+        <span style={{ fontSize: 16, fontWeight: 600, color: '#081732', letterSpacing: '0.3px', lineHeight: '22px' }}>
           Financial Trends
         </span>
-        <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
-          {SERIES.map(({ label, legendDot }) => (
-            <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <img src={legendDot} alt="" style={{ width: 10, height: 10, objectFit: 'contain', flexShrink: 0 }} />
-              <span style={{ fontSize: 14, fontWeight: 400, color: '#081732', letterSpacing: '-0.15px', lineHeight: '20px', whiteSpace: 'nowrap' }}>
+        <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
+          {SERIES.map(({ label, stroke }) => (
+            <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: stroke, flexShrink: 0 }} />
+              <span style={{ fontSize: 12, fontWeight: 400, color: '#081732', letterSpacing: '-0.15px', lineHeight: '18px', whiteSpace: 'nowrap' }}>
                 {label}
               </span>
             </div>
@@ -105,13 +106,13 @@ export default function FinancialChart({ data }) {
           {/* Horizontal grid lines */}
           {Y_LABELS.map(v => (
             <line key={v} x1={PAD_L} x2={W - PAD_R} y1={toY(v)} y2={toY(v)}
-              stroke="rgba(165,165,170,0.4)" strokeWidth="0.5" />
+              stroke="rgba(165,165,170,0.75)" strokeWidth="0.5" />
           ))}
 
           {/* Vertical grid lines at each quarter */}
           {QUARTERS.map((_, i) => (
             <line key={i} x1={toX(i)} x2={toX(i)} y1={PAD_T} y2={PAD_T + chartH}
-              stroke="rgba(165,165,170,0.3)" strokeWidth="0.3" />
+              stroke="rgba(165,165,170,0.65)" strokeWidth="0.5" />
           ))}
 
           {/* Y-axis vertical line */}
@@ -123,7 +124,7 @@ export default function FinancialChart({ data }) {
           {/* Y-axis labels — at negative x, visible inside card's 30px left padding */}
           {Y_LABELS.map(v => (
             <text key={v} x={LABEL_X} y={toY(v) + 5}
-              textAnchor="end" fontSize="14" fill="#081732"
+              textAnchor="end" fontSize="11" fill="#081732"
               fontFamily="Outfit, sans-serif" letterSpacing="-0.15">
               {v}
             </text>
@@ -132,7 +133,7 @@ export default function FinancialChart({ data }) {
           {/* X-axis labels */}
           {QUARTERS.map((q, i) => (
             <text key={q} x={toX(i)} y={H - 8}
-              textAnchor="middle" fontSize="14" fill="#081732"
+              textAnchor="middle" fontSize="11" fill="#081732"
               fontFamily="Outfit, sans-serif" letterSpacing="-0.15">
               {q}
             </text>
@@ -145,9 +146,9 @@ export default function FinancialChart({ data }) {
           })}
 
           {/* Data-point dots */}
-          {SERIES.map(({ key, lineDot }) =>
+          {SERIES.map(({ key, stroke }) =>
             seriesData[key].map((v, i) => (
-              <image key={`${key}-${i}`} href={lineDot} x={toX(i) - 5} y={toY(v) - 5} width={10} height={10} />
+              <circle key={`${key}-${i}`} cx={toX(i)} cy={toY(v)} r={4} fill={stroke} fillOpacity="0.85" />
             ))
           )}
 
@@ -169,14 +170,14 @@ export default function FinancialChart({ data }) {
             top: tooltipTop,
             width: TOOLTIP_W,
             background: '#fefdff',
-            borderRadius: 20,
+            borderRadius: 8,
             padding: '14px 16px',
             fontFamily: 'Outfit, sans-serif',
             boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
             pointerEvents: 'none',
             zIndex: 10,
           }}>
-            <div style={{ fontSize: 10, fontWeight: 600, color: '#081732', marginBottom: 8, letterSpacing: '0.07px', lineHeight: '16px' }}>
+            <div style={{ fontSize: 10, fontWeight: 600, color: 'rgba(8,23,50,0.45)', marginBottom: 8, letterSpacing: '0.07px', lineHeight: '16px' }}>
               {QUARTERS[tooltip.q]}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 13, fontWeight: 400, color: '#000', letterSpacing: '-0.15px', lineHeight: '20px' }}>

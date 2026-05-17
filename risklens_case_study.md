@@ -1,8 +1,8 @@
-# RiskLens: Financial Risk Assessment SaaS
+# RISKLens
 
-**B2B · SaaS · Fintech · Enterprise · Data-heavy**
+**FinTech · B2B · Risk Analysis · AI-Powered**
 
-Designing a workflow that helps risk analysts quickly assess borrower health without drowning in data
+### Designing a workflow that helps risk analysts quickly assess borrower health without drowning in data
 
 ---
 
@@ -10,28 +10,10 @@ Designing a workflow that helps risk analysts quickly assess borrower health wit
 Product & UX Designer + Developer
 
 **Duration**  
-2 Weeks
+4 Weeks
 
 **Tools**  
-Figma, Claude AI, Vercel
-
----
-
-## Scope
-
-UX Research  
-Interaction Design  
-Visual Design  
-Information Architecture  
-AI-Assisted Development
-
----
-
-## Introduction
-
-Most fintech risk analysis tools bury critical signals under overwhelming data layers, forcing analysts to hunt for insights instead of making confident decisions.
-
-I designed a scannable risk workflow that prioritizes key signals through information hierarchy and progressive disclosure — then built it using AI-assisted development, turning Figma designs directly into production code and shipping a responsive SaaS product in 2 weeks.
+Figma, Claude AI, React, Node.js, Vercel
 
 ---
 
@@ -39,16 +21,19 @@ I designed a scannable risk workflow that prioritizes key signals through inform
 
 Most risk analysis tools in fintech are hard to skim. Large amounts of financial data need to be understood quickly, but the interfaces make it overwhelming.
 
-**Key challenge**: Large amounts of financial data need to be understood quickly.
+[INSERT: Before screenshot - cluttered interface]
+
+**The challenge**: Design a workflow that helps risk analysts quickly assess borrower health, identify potential risks, and investigate detailed financial information — without drowning in noise.
+
+**My personal challenge**: I didn't know where to start design since it has overwhelming information and that should reach the user effectively to make a decision.
 
 ---
 
 ## User Context
 
 Risk analysts review multiple borrowers regularly to monitor financial health and identify potential risk. They need to:
-
 - Scan portfolios fast
-- Spot high-risk accounts immediately
+- Spot high-risk accounts immediately  
 - Investigate why a borrower is risky
 - Decide whether to monitor, review, or escalate
 
@@ -56,22 +41,43 @@ Risk analysts review multiple borrowers regularly to monitor financial health an
 
 ## My Approach
 
+I created a structured portfolio and analysis experience that prioritizes key risk signals, supports quick scanning, and enables deeper investigation without overwhelming the user.
+
+I made all the information clear to have a quick skim and put it in IA and in hierarchy so that the user can just see what is important.
+
+---
+
+## My Process
+
 ### 01 — Research
 
 I took a look at similar SaaS tools and tried to understand the structure of what a user wants to see in it and what to prioritize.
 
 ---
 
-### 02 — User Flow
+### 02 — Design System First
 
-1. Scan portfolio to identify high-risk accounts
-2. Open a borrower that needs attention
-3. Investigate financial performance and risk drivers
-4. Decide whether to monitor, review, or escalate
+I came up with the design system first — color, grid, spacing, typography, buttons, and other components.
+
+[INSERT: Design system screenshot]
+
+**Why first**: Building the foundation before screens meant consistency from the start and cleaner code generation later.
 
 ---
 
-### 03 — Design Principles
+### 03 — User Flow
+
+**Scan portfolio** to identify high-risk accounts  
+↓  
+**Open a borrower** that needs attention  
+↓  
+**Investigate** financial performance and risk drivers  
+↓  
+**Decide** whether to monitor, review, or escalate
+
+---
+
+### 04 — Design Principles
 
 **Prioritize risk visibility**  
 Risk score, status, and alerts are placed prominently to support quick decision-making.
@@ -87,21 +93,25 @@ Neutral visual base with color used only for risk and status signals.
 
 ---
 
-### 04 — Sketching
+### 05 — Sketching
 
 I started sketching the screens using pen and paper.
 
+[INSERT: Sketches photo if you have]
+
 ---
 
-### 05 — Figma Design
+### 06 — Figma Design
 
 I used Google Stitch and Figma Make to generate but it wasn't good — rather I took inspiration from it and tried to do a low-fi in Figma, then I used all the design system and designed it in Figma.
 
 I made the prototype work there.
 
+[INSERT: Figma screenshot]
+
 ---
 
-### 06 — Vibe Coding with AI
+### 07 — Vibe Coding with AI
 
 Once after finishing the prototype, I started vibe coding.
 
@@ -111,17 +121,19 @@ I connected my Figma MCP to Claude Code, then started coding. I used React and N
 
 First I asked Claude to just write code to my design — the output wasn't perfect in the first go, so I had to go with multiple iterations page by page. Eventually my prompt engineering skill got improved and I learned how to use tokens effectively.
 
+[INSERT: Screenshot of Figma + Claude Code workflow]
+
 **My prompts evolved:**
 
-**Early**: "Build the portfolio overview screen"
+Early: "Build the portfolio overview screen"
 
-**Later**: "The risk score badges need more visual weight. Increase font size to 32px, add 2px border, tighten padding to 8px vertical. The spacing between cards feels cramped — increase gap to 24px."
+Later: "The risk score badges need more visual weight. Increase font size to 32px, add 2px border, tighten padding to 8px vertical. The spacing between cards feels cramped — increase gap to 24px."
 
 **The shift**: While vibe coding, my perspective shifted from designer to a design critique and my prompts were according to it and improved. While coding I changed and added elements — doing critique helped me do it.
 
 ---
 
-### 07 — Development + Deployment
+### 08 — Development + Deployment
 
 I connected my Claude with VS Code and pushed all the code to my GitHub.
 
@@ -177,18 +189,6 @@ Visual bar charts showing risk patterns across categories. Analysts can identify
 
 ---
 
-## Design System
-
-### Typography
-
-[INSERT: Typography screenshot]
-
-### Color Palette
-
-[INSERT: Color palette screenshot]
-
----
-
 ## What I Focused On
 
 While doing design and vibe coding I was clear that:
@@ -232,10 +232,8 @@ The output wasn't perfect in the first go. I had to go with multiple iterations 
 
 ---
 
-**Shipped in 2 weeks** — From research to deployed product
+**Shipped in 4 weeks** — From research to deployed product
 
 [View Live Product](https://fintech-risk-analysis-tool-th7y.vercel.app/)
-
----
 
 © 2026 Harita Kancheepuram Sundararajan

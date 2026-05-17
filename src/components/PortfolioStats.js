@@ -8,42 +8,37 @@ function TrendBadge({ text, green }) {
   return (
     <div style={{
       background: green ? 'rgba(5,192,75,0.08)' : 'rgba(233,0,11,0.08)',
-      borderRadius: 10, padding: '0 10px',
-      display: 'inline-flex', alignItems: 'center',
+      borderRadius: 30, padding: '1px 8px',
+      display: 'inline-flex', alignItems: 'center', flexShrink: 0,
     }}>
-      <span style={{ fontSize: 14, fontWeight: 700, lineHeight: '20px', color, letterSpacing: '-0.15px' }}>
+      <span style={{ fontSize: 12, fontWeight: 700, lineHeight: '18px', color, letterSpacing: '-0.1px', whiteSpace: 'nowrap' }}>
         {text}
       </span>
     </div>
   );
 }
 
-function KpiCard({ icon, label, value, trend, valueColor, cardFlex }) {
+function KpiCard({ icon, label, value, trend, valueColor, cardFlex, trendRed }) {
   return (
     <div style={{
-      flex: cardFlex, minWidth: 0, padding: 24, borderRadius: 30,
-      background: GRADIENT,
-      display: 'flex', flexDirection: 'column', gap: 16,
+      flex: cardFlex, minWidth: 0, padding: '12px 14px', borderRadius: 8,
+      background: '#ffffff',
+      display: 'flex', flexDirection: 'column', gap: 6,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-        <img src={icon} alt="" style={{ width: 20, height: 20, objectFit: 'contain' }} />
-        <span style={{ fontSize: 14, fontWeight: 400, lineHeight: '20px', color: '#000', letterSpacing: '-0.15px' }}>
+        <img src={icon} alt="" style={{ width: 14, height: 14, objectFit: 'contain', opacity: 0.5 }} />
+        <span style={{ fontSize: 12, fontWeight: 400, lineHeight: '18px', color: 'rgba(8,23,50,0.5)', letterSpacing: '-0.15px' }}>
           {label}
         </span>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
         <span style={{
-          fontSize: 36, fontWeight: 400, lineHeight: 'normal',
-          letterSpacing: '1.08px', color: valueColor || '#000',
+          fontSize: 22, fontWeight: 400, lineHeight: 'normal',
+          letterSpacing: '0.5px', color: valueColor || '#000',
         }}>
           {value}
         </span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <TrendBadge text={trend} green />
-          <span style={{ fontSize: 14, fontWeight: 400, color: '#808080', letterSpacing: '-0.15px' }}>
-            vs last quarter
-          </span>
-        </div>
+        <TrendBadge text={trend} green={!trendRed} />
       </div>
     </div>
   );
@@ -51,32 +46,16 @@ function KpiCard({ icon, label, value, trend, valueColor, cardFlex }) {
 
 export default function PortfolioStats() {
   const { isMobile } = useBreakpoint();
-  const greetingFlex = isMobile ? '0 0 100%' : '1 0 0';
-  const cardFlex = isMobile ? '0 0 calc(50% - 10px)' : '1 0 0';
+  const cardFlex = isMobile ? '0 0 calc(50% - 6px)' : '1 0 0';
 
   return (
     <div style={{
-      display: 'flex', flexWrap: 'wrap', gap: 20, alignItems: 'stretch',
-      background: '#fefdff',
+      display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'stretch',
     }}>
-      <div style={{ flex: greetingFlex, minWidth: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <div style={{ fontSize: isMobile ? 28 : 36, fontWeight: 400, letterSpacing: '1.08px', lineHeight: '32px', color: '#081732' }}>
-          Hello,{' '}
-          <span style={{
-            fontWeight: 700,
-            background: 'linear-gradient(180deg, #6717cd 0%, #2871fa 100%)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-          }}>Adam</span>!
-        </div>
-        <div style={{ fontSize: isMobile ? 18 : 24, fontWeight: 400, lineHeight: '32px', color: '#081732', letterSpacing: '0.07px', marginTop: 4 }}>
-          Here is the overview.
-        </div>
-      </div>
-
       <KpiCard icon={imgTransaction}   label="Revenue"             value="$466M"  trend="↑ 3.2%"  cardFlex={cardFlex} />
-      <KpiCard icon={imgRating}        label="Average Risk Score"  value="642"    trend="↑ 3.2%"  cardFlex={cardFlex} />
-      <KpiCard icon={imgWarningShield} label="High-Risk Borrowers" value="2"      trend="↑ 3.2%"  cardFlex={cardFlex} valueColor="#e9000b" />
-      <KpiCard icon={imgSurvey}        label="Needs Review"        value="4"      trend="+2"       cardFlex={cardFlex} />
+      <KpiCard icon={imgRating}        label="Average risk score"  value="642"    trend="↑ 3.2%"  cardFlex={cardFlex} />
+      <KpiCard icon={imgWarningShield} label="High-risk borrowers" value="2"      trend="↑ 3.2%"  cardFlex={cardFlex} valueColor="#e9000b" trendRed />
+      <KpiCard icon={imgSurvey}        label="Needs review"        value="4"      trend="+2"       cardFlex={cardFlex} />
     </div>
   );
 }

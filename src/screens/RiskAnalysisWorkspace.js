@@ -20,12 +20,23 @@ function OverviewTab({ financials, riskProfile, signals }) {
   const isStacked = isMobile || isTablet;
 
   return (
-    <div style={{ display: 'flex', flexDirection: isStacked ? 'column' : 'row', gap: 20, alignItems: 'flex-start' }}>
-      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 25 }}>
-        <FinancialChart data={financials} />
-        <RiskProfileChart metrics={riskProfile} />
+    <div style={{ display: 'flex', flexDirection: isStacked ? 'column' : 'row', gap: 16, alignItems: 'flex-start' }}>
+      {/* Financial Trends + Risk Profile: match each other's height, isolated from Risk Signals */}
+      <div style={{
+        flex: isStacked ? 'none' : '0 0 calc(75% - 4px)',
+        width: isStacked ? '100%' : undefined,
+        display: 'flex', flexDirection: isStacked ? 'column' : 'row',
+        gap: 16, alignItems: isStacked ? 'flex-start' : 'stretch',
+      }}>
+        <div style={{ flex: isStacked ? 'none' : '0 0 calc(66.67% - 5.33px)', width: isStacked ? '100%' : undefined, minWidth: 0 }}>
+          <FinancialChart data={financials} />
+        </div>
+        <div style={{ flex: isStacked ? 'none' : 1, width: isStacked ? '100%' : undefined, minWidth: 0 }}>
+          <RiskProfileChart metrics={riskProfile} />
+        </div>
       </div>
-      <div style={{ flex: isStacked ? 'none' : '0 0 515px', width: isStacked ? '100%' : undefined }}>
+      {/* Risk Signals: expands independently */}
+      <div style={{ flex: isStacked ? 'none' : '0 0 calc(25% - 12px)', width: isStacked ? '100%' : undefined, minWidth: 0 }}>
         <RiskSignals signals={signals} totalCount={signals.length} />
       </div>
     </div>
@@ -38,7 +49,7 @@ function ComingSoonTab() {
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       minHeight: 320,
       background: 'linear-gradient(116.96deg, rgba(40,113,250,0.04) 0%, rgba(103,23,205,0.04) 100%)',
-      borderRadius: 30,
+      borderRadius: 8,
     }}>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
         <div style={{
@@ -87,18 +98,20 @@ export default function RiskAnalysisWorkspace({ borrower, onBack }) {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#fefdff', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', background: '#F8F7FF', display: 'flex', flexDirection: 'column' }}>
       <Navbar onBack={onBack} />
 
-      <div style={{ flex: 1, background: '#fefdff', padding: isMobile ? '0 8px' : '0 10px' }}>
+      <div style={{ flex: 1, background: 'transparent', padding: isMobile ? '0 8px' : '0 10px' }}>
         <div style={{
-          display: 'flex', flexDirection: 'column', gap: isMobile ? 16 : 25,
-          padding: isMobile ? '16px 0' : '30px 0',
+          display: 'flex', flexDirection: 'column', gap: isMobile ? 10 : 16,
+          padding: isMobile ? '10px 0' : '16px 0',
         }}>
           <BorrowerHeader borrower={borrower} onBack={onBack} />
 
-          <div style={{ display: 'flex', justifyContent: 'center', padding: isMobile ? '0 4px' : 0 }}>
-            <TabNav activeTab={activeTab} onTabChange={setActiveTab} />
+          <div style={{ display: 'flex', justifyContent: 'center', padding: isMobile ? '0 4px' : 0, marginBottom: isMobile ? 6 : 12 }}>
+            <div style={{ width: isMobile ? '100%' : 'calc(50% - 5px)' }}>
+              <TabNav activeTab={activeTab} onTabChange={setActiveTab} />
+            </div>
           </div>
 
           {isTechCorp && activeTab !== 'Financial Performance' && activeTab !== 'Risk Signals' && activeTab !== 'Contextual Insights' && <MetricCards />}

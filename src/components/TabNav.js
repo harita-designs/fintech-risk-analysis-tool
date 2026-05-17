@@ -1,47 +1,53 @@
+import { useState } from 'react';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const TABS = ['Overview', 'Financial Performance', 'Risk Signals', 'Contextual Insights'];
 
 export default function TabNav({ activeTab, onTabChange }) {
   const { isMobile, isTablet } = useBreakpoint();
-  const fontSize = isMobile ? 14 : isTablet ? 18 : 24;
+  const [hoveredTab, setHoveredTab] = useState(null);
+  const fontSize = isMobile ? 13 : isTablet ? 14 : 15;
 
   return (
     <div className="tab-scroll" style={{
-      width: '100%',
-      maxWidth: 952,
       overflowX: 'auto',
-      background: '#f8f7ff',
-      border: '0.3px solid #14397d',
-      borderRadius: 30,
-      padding: isMobile ? '12px 16px' : '20px 25px',
+      background: '#fefdff',
+      border: '0.3px solid rgba(20,57,125,0.25)',
+      borderRadius: 10,
+      padding: isMobile ? '5px 6px' : '6px 8px',
       display: 'flex',
-      gap: isMobile ? 6 : 10,
+      width: '100%',
+      gap: isMobile ? 3 : 4,
       alignItems: 'center',
-      alignSelf: 'center',
-      flexShrink: 0,
     }}>
       {TABS.map(tab => {
         const isActive = tab === activeTab;
+        const isHovered = hoveredTab === tab && !isActive;
         return (
           <button
             key={tab}
             onClick={() => onTabChange(tab)}
+            onMouseEnter={() => setHoveredTab(tab)}
+            onMouseLeave={() => setHoveredTab(null)}
             style={{
-              padding: isMobile ? '8px 14px' : '10px 25px',
-              borderRadius: 20,
+              flex: 1,
+              padding: isMobile ? '6px 12px' : '7px 18px',
+              borderRadius: 8,
               border: 'none',
               cursor: 'pointer',
-              background: isActive ? '#2871fa' : 'transparent',
+              background: isActive
+                ? 'linear-gradient(116.96deg, #2871fa 0%, #6717cd 100%)'
+                : isHovered
+                ? 'rgba(40,113,250,0.08)'
+                : 'transparent',
               fontSize,
               fontWeight: 400,
               lineHeight: '1.3',
-              color: isActive ? '#f8f7ff' : '#081732',
+              color: isActive ? '#fefdff' : '#081732',
               letterSpacing: '0.07px',
               whiteSpace: 'nowrap',
               fontFamily: 'Outfit, sans-serif',
-              transition: 'background 0.2s ease, color 0.2s ease',
-              flexShrink: 0,
+              transition: 'background 0.18s ease, color 0.18s ease',
             }}
           >
             {tab}

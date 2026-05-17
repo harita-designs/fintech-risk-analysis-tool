@@ -1,77 +1,119 @@
-// Figma MCP asset URLs — valid for 7 days from last fetch
-// Navbar
-export const imgLogo         = "https://www.figma.com/api/mcp/asset/55974026-a926-4a25-819f-4535f1c51f42";
-export const imgSearch       = "https://www.figma.com/api/mcp/asset/d36fd54f-3437-4666-90de-35342363c498";
-export const imgBarChart     = "https://www.figma.com/api/mcp/asset/e7ef6def-9a8f-4240-a6ca-38ef49fa53ff";
-export const imgComments     = "https://www.figma.com/api/mcp/asset/3fb100f5-6735-4475-baaf-dfdff21fb411";
-export const imgSettings     = "https://www.figma.com/api/mcp/asset/8f792c7b-f052-4d14-b0c2-e424a2480d2f";
-export const imgNavIconBg    = "https://www.figma.com/api/mcp/asset/aa3f6dbb-1ebd-4150-8af7-7579542cb374";
-export const imgNotification = "https://www.figma.com/api/mcp/asset/c91a0daf-67dd-4c78-b2cb-3e565c4d7098";
-export const imgNotifyBg     = "https://www.figma.com/api/mcp/asset/aa3f6dbb-1ebd-4150-8af7-7579542cb374";
-export const imgProfile      = "https://www.figma.com/api/mcp/asset/d2178f46-049b-420a-9fb5-97a5c9209e3e";
+const ic = svg => `data:image/svg+xml,${encodeURIComponent(svg)}`;
 
-// Portfolio stats (Screen 1 header)
-export const imgTransaction  = "https://www.figma.com/api/mcp/asset/5c20173e-e6c8-4680-bbe3-c3ef3a386198";
-export const imgRating       = "https://www.figma.com/api/mcp/asset/2294771c-ad54-4b06-95dd-f1d43221b895";
-export const imgWarningShield= "https://www.figma.com/api/mcp/asset/f6255d5c-01f8-413a-9b57-f9fe8a3fa245";
-export const imgSurvey       = "https://www.figma.com/api/mcp/asset/4068877f-f425-4d76-88dd-d31287a3b1a7";
-export const imgActivity     = "https://www.figma.com/api/mcp/asset/2218561a-496e-40b1-8802-1c777ed5ae64";
+// ── Navbar ─────────────────────────────────────────────────────────────────────
+export const imgLogo = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"/>`);
 
-// Portfolio row
-export const imgAlertTriangle= "https://www.figma.com/api/mcp/asset/e771e5fc-5d0c-4d84-9c0c-9ecf136ccf6c";
-export const imgArrowForward = "https://www.figma.com/api/mcp/asset/a706405d-88e6-4038-9f6a-dee65ebb8664";
-export const imgTrendingDown = "https://www.figma.com/api/mcp/asset/194aef78-bb80-4c86-8d97-1a56e8bb2289";
-export const imgTrendingUp   = "https://www.figma.com/api/mcp/asset/1b198cc4-e8c6-4249-abbd-05e0eb7a34ce";
-export const imgExpandArrow  = "https://www.figma.com/api/mcp/asset/e240ce0b-4ada-4acd-ae1b-8e7d2bb4805c";
+export const imgSearch = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`);
 
-// Pagination arrows (Arrow btn component — Default + Hover/Variant2)
-export const imgArrowLeft        = "https://www.figma.com/api/mcp/asset/6fcb84c3-aa9a-4115-92d4-f216d4616cdc";
-export const imgArrowLeftHover   = "https://www.figma.com/api/mcp/asset/8be66d35-990e-4421-851e-07d2b8e0d0c9";
-export const imgArrowCircle      = "https://www.figma.com/api/mcp/asset/760db831-48c9-4d2d-bdc0-4eab32a0d690";
-export const imgArrowCircleBlue  = "https://www.figma.com/api/mcp/asset/d9b710e5-da12-4d32-8f87-99dd8a28b3e6";
+export const imgBarChart = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="2" y="13" width="4" height="8" rx="1"/></svg>`);
 
-// Screen 2 — Borrower header back button (Default + Hover)
-export const imgBackBtnBg       = "https://www.figma.com/api/mcp/asset/754ab1f6-6b74-4518-acaa-0d4722b45acf";
-export const imgBackBtnBgHover  = "https://www.figma.com/api/mcp/asset/5355a33c-22eb-4866-90f8-6763008e9705";
-export const imgBackArrow       = "https://www.figma.com/api/mcp/asset/0593a45f-b5da-4cec-8c57-47f741725409";
-export const imgBackArrowHover  = "https://www.figma.com/api/mcp/asset/b09348d2-05fe-478a-827c-7127d147d34d";
+export const imgComments = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`);
 
-// Screen 2 — Metric card icons
-export const imgRevenueIcon  = "https://www.figma.com/api/mcp/asset/5c20173e-e6c8-4680-bbe3-c3ef3a386198";
-export const imgCashFlowIcon = "https://www.figma.com/api/mcp/asset/2218561a-496e-40b1-8802-1c777ed5ae64";
-export const imgDebtIcon     = "https://www.figma.com/api/mcp/asset/2b19eea6-b620-400c-aa7d-2f2950ba1d8e";
-export const imgLiquidityIcon= "https://www.figma.com/api/mcp/asset/5d2b6411-ab35-4610-920c-1e3a2072a6a8";
+export const imgSettings = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`);
 
-// Screen 2 — Risk signals
-export const imgXCircle      = "https://www.figma.com/api/mcp/asset/c3c7d3bc-19d2-4f88-acdd-6fa0873b08c5";
-export const imgAlertCircle  = "https://www.figma.com/api/mcp/asset/5d42d7d4-a5cc-44fb-bb62-8e3fedf1fdf4";
+export const imgNavIconBg = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><circle cx="25" cy="25" r="24" fill="#f8f7ff" stroke="#14397d" stroke-width="0.5"/></svg>`);
 
-// Screen 2 — Covenant Tracking
-export const imgCovenantXCircle = "https://www.figma.com/api/mcp/asset/efb4a155-424b-45fb-ae52-61df79db4950";
-export const imgLine17          = "https://www.figma.com/api/mcp/asset/c0cf17cf-cb56-4111-9be9-9f6064bd2cac";
+export const imgNotification = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>`);
 
-// Screen 2.1 — Financial Performance tab
-export const imgCheckCircle       = "https://www.figma.com/api/mcp/asset/49278f0a-cb8b-488e-aa20-d946da64d5d4";
-export const imgAlertCircleYellow = "https://www.figma.com/api/mcp/asset/66e3228a-98b2-4ab8-a3f9-757b833d4b33";
+export const imgNotifyBg = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 50"><rect width="100" height="50" rx="25" fill="#f1f1ff"/></svg>`);
 
-// Screen 2.2 — Financial Performance tab ratio icons (fresh URLs)
-export const imgFPCheckCircle = "https://www.figma.com/api/mcp/asset/857c285a-5a9d-47be-bd83-7e67efbfe7d0";
-export const imgFPAlertCircle = "https://www.figma.com/api/mcp/asset/081d0938-ab4c-4c47-b130-691c82ce10f1";
+export const imgProfile = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2871fa"/><stop offset="100%" stop-color="#6717cd"/></linearGradient></defs><rect width="40" height="40" fill="url(#pg)"/><circle cx="20" cy="15" r="7" fill="rgba(255,255,255,0.92)"/><ellipse cx="20" cy="35" rx="13" ry="9" fill="rgba(255,255,255,0.92)"/></svg>`);
 
-// Screen 2.1 Overview — Financial Trends chart legend dots
-export const imgDotRevenue  = "https://www.figma.com/api/mcp/asset/74e0fd3d-10d7-4274-bfed-82bbff0b005f";
-export const imgDotCashFlow = "https://www.figma.com/api/mcp/asset/3525f50a-1e3e-4430-ac71-b1975d922c0a";
-export const imgDotDebt     = "https://www.figma.com/api/mcp/asset/cfd35aff-e9cf-45eb-b4b7-9828b4370711";
-export const imgDotDark     = "https://www.figma.com/api/mcp/asset/69e336ab-6e26-4a3a-ad5e-20e639702207";
+// ── Portfolio stats ────────────────────────────────────────────────────────────
+export const imgTransaction = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`);
 
-// Screen 2.3 — Risk Signals tab
-export const imgXCircleRed  = "https://www.figma.com/api/mcp/asset/3ab87909-2514-4f98-b8e1-f03c86db414f";
-export const imgExtLinkUp   = "https://www.figma.com/api/mcp/asset/18eef0f5-a93b-458a-a793-2bbe1f814034";
+export const imgRating = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`);
 
-// Screen 2.4 — Contextual Insights tab
-export const imgCIAvatar1  = "https://www.figma.com/api/mcp/asset/af9ffbdc-0aad-4563-80b8-1e82cc38da02";
-export const imgCIAvatar2  = "https://www.figma.com/api/mcp/asset/6f67765a-204c-4043-b9d2-4fbed615d17e";
-export const imgCIDocPdf   = "https://www.figma.com/api/mcp/asset/f59ebda2-5364-4fca-a5f0-72aae6df06ad";
-export const imgCIDocBank  = "https://www.figma.com/api/mcp/asset/f7ddec6d-ceca-475d-bd9e-cd5900430e9e";
-export const imgCIDocLoan  = "https://www.figma.com/api/mcp/asset/d6f6037e-cb83-4eb3-8746-067456726eff";
-export const imgCIDownload = "https://www.figma.com/api/mcp/asset/06b1d27a-c5dc-49b7-b52f-4b4c4aa771e1";
+export const imgWarningShield = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`);
+
+export const imgSurvey = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="16" y2="15"/></svg>`);
+
+export const imgActivity = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`);
+
+// ── Portfolio row ──────────────────────────────────────────────────────────────
+export const imgAlertTriangle = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#d69200" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`);
+
+export const imgArrowForward = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`);
+
+export const imgArrowForwardGradient = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="arrowGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#2871fa"/><stop offset="100%" stop-color="#6717cd"/></linearGradient></defs><line x1="5" y1="12" x2="19" y2="12" stroke="url(#arrowGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="12 5 19 12 12 19" stroke="url(#arrowGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`);
+
+export const imgTrendingDown = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#e9000b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>`);
+
+export const imgTrendingUp = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#05c04b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`);
+
+export const imgExpandArrow = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`);
+
+// ── Pagination ─────────────────────────────────────────────────────────────────
+export const imgArrowLeft = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>`);
+
+export const imgArrowLeftHover = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>`);
+
+export const imgArrowCircle = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" fill="none"><circle cx="25" cy="25" r="24" fill="#fefdff" stroke="#14397d" stroke-width="0.5"/></svg>`);
+
+export const imgArrowCircleBlue = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><circle cx="25" cy="25" r="25" fill="#2871fa"/></svg>`);
+
+// ── Borrower header back button ────────────────────────────────────────────────
+export const imgBackBtnBg = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" fill="none"><circle cx="25" cy="25" r="24" fill="#fefdff" stroke="#14397d" stroke-width="0.5"/></svg>`);
+
+export const imgBackBtnBgHover = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><circle cx="25" cy="25" r="25" fill="#2871fa"/></svg>`);
+
+export const imgBackArrow = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>`);
+
+export const imgBackArrowHover = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>`);
+
+// ── Metric card icons ──────────────────────────────────────────────────────────
+export const imgRevenueIcon = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`);
+
+export const imgCashFlowIcon = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`);
+
+export const imgDebtIcon = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>`);
+
+export const imgLiquidityIcon = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>`);
+
+// ── Risk signal icons ──────────────────────────────────────────────────────────
+export const imgXCircle = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#e9000b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`);
+
+export const imgAlertCircle = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#d69200" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`);
+
+// ── Covenant Tracking ──────────────────────────────────────────────────────────
+export const imgCovenantXCircle = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#e9000b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`);
+
+export const imgLine17 = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 2"><line x1="0" y1="1" x2="100" y2="1" stroke="rgba(20,57,125,0.15)" stroke-width="0.3"/></svg>`);
+
+// ── Financial Performance tab ──────────────────────────────────────────────────
+export const imgCheckCircle = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#05c04b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`);
+
+export const imgAlertCircleYellow = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#d69200" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`);
+
+// ── Financial Performance tab ratio icons ──────────────────────────────────────
+export const imgFPCheckCircle = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#05c04b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`);
+
+export const imgFPAlertCircle = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#e7000b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`);
+
+// ── Financial Trends chart legend / line dots ──────────────────────────────────
+export const imgDotRevenue  = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#1a2a4a"/></svg>`);
+export const imgDotCashFlow = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#6717cd"/></svg>`);
+export const imgDotDebt     = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#b38be6"/></svg>`);
+export const imgDotDark     = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#1a2a4a"/></svg>`);
+
+// ── Risk Signals tab ───────────────────────────────────────────────────────────
+export const imgXCircleRed = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#e9000b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`);
+
+export const imgExtLinkUp = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>`);
+
+export const imgExtLinkUpGradient = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="elg" gradientUnits="userSpaceOnUse" x1="5" y1="19" x2="19" y2="5"><stop offset="0%" stop-color="#2871fa"/><stop offset="100%" stop-color="#6717cd"/></linearGradient></defs><line x1="12" y1="19" x2="12" y2="5" stroke="url(#elg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="5 12 12 5 19 12" stroke="url(#elg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`);
+
+// ── Contextual Insights tab ────────────────────────────────────────────────────
+export const imgCIAvatar1 = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" fill="#0d9488"/><circle cx="20" cy="15" r="6" fill="rgba(255,255,255,0.9)"/><ellipse cx="20" cy="33" rx="11" ry="8" fill="rgba(255,255,255,0.9)"/></svg>`);
+
+export const imgCIAvatar2 = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" fill="#d97706"/><circle cx="20" cy="15" r="6" fill="rgba(255,255,255,0.9)"/><ellipse cx="20" cy="33" rx="11" ry="8" fill="rgba(255,255,255,0.9)"/></svg>`);
+
+export const imgCIDocPdf = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 36" fill="none"><path d="M4 2h16l8 8v24a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" stroke="#081732" stroke-width="1.5" stroke-linejoin="round"/><path d="M20 2v8h8" stroke="#081732" stroke-width="1.5" stroke-linejoin="round"/><rect x="2" y="20" width="16" height="9" rx="1.5" fill="#e9000b"/><text x="10" y="27" text-anchor="middle" font-family="Arial,sans-serif" font-size="5.5" font-weight="700" fill="white">PDF</text></svg>`);
+
+export const imgCIDocBank = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 36" fill="none"><path d="M4 2h16l8 8v24a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" stroke="#081732" stroke-width="1.5" stroke-linejoin="round"/><path d="M20 2v8h8" stroke="#081732" stroke-width="1.5" stroke-linejoin="round"/><rect x="2" y="20" width="16" height="9" rx="1.5" fill="#2871fa"/><text x="10" y="27" text-anchor="middle" font-family="Arial,sans-serif" font-size="5" font-weight="700" fill="white">BANK</text></svg>`);
+
+export const imgCIDocLoan = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 36" fill="none"><path d="M4 2h16l8 8v24a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" stroke="#081732" stroke-width="1.5" stroke-linejoin="round"/><path d="M20 2v8h8" stroke="#081732" stroke-width="1.5" stroke-linejoin="round"/><rect x="2" y="20" width="16" height="9" rx="1.5" fill="#6717cd"/><text x="10" y="27" text-anchor="middle" font-family="Arial,sans-serif" font-size="5" font-weight="700" fill="white">LOAN</text></svg>`);
+
+export const imgCIDownload = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#081732" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`);
+
+export const imgCIDownloadGradient = ic(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="dlg" gradientUnits="userSpaceOnUse" x1="3" y1="21" x2="21" y2="3"><stop offset="0%" stop-color="#2871fa"/><stop offset="100%" stop-color="#6717cd"/></linearGradient></defs><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="url(#dlg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="7 10 12 15 17 10" stroke="url(#dlg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="15" x2="12" y2="3" stroke="url(#dlg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`);

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { imgBackBtnBg, imgBackBtnBgHover, imgBackArrow, imgBackArrowHover, imgAlertTriangle } from '../assets/images';
+import { imgBackArrow, imgAlertTriangle } from '../assets/images';
 import { riskColor } from '../data/borrowers';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 
@@ -7,72 +7,95 @@ export default function BorrowerHeader({ borrower, onBack }) {
   const [backHovered, setBackHovered] = useState(false);
   const { isMobile } = useBreakpoint();
   const rc = riskColor(borrower.riskLevel);
-  const GRADIENT = 'linear-gradient(164.3deg, rgba(40,113,250,0.05) 50.33%, rgba(103,23,205,0.05) 95.81%)';
 
   return (
     <div style={{
-      width: '100%', background: GRADIENT,
-      borderRadius: 30, padding: isMobile ? '16px 18px' : '20px 25px',
-      display: 'flex', flexWrap: 'wrap', alignItems: 'center',
-      justifyContent: 'space-between', gap: isMobile ? 12 : 0,
+      width: '100%',
+      borderRadius: 8, padding: isMobile ? '10px 12px' : '12px 16px',
+      display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 20,
     }}>
-      {/* Left: back button + borrower info */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: isMobile ? 14 : 24, flex: '1 0 0', minWidth: 220 }}>
-        <button
-          onClick={onBack}
-          onMouseEnter={() => setBackHovered(true)}
-          onMouseLeave={() => setBackHovered(false)}
-          style={{
-            position: 'relative', width: 50, height: 50, flexShrink: 0,
-            border: 'none', background: 'transparent', cursor: 'pointer', padding: 0,
-          }}
-        >
-          <img src={backHovered ? imgBackBtnBgHover : imgBackBtnBg} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
-          <img src={backHovered ? imgBackArrowHover : imgBackArrow} alt="Back" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', padding: 10 }} />
-        </button>
 
-        {/* Name + status + meta */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 14 : 24 }}>
-          <span style={{ fontSize: isMobile ? 22 : 32, fontWeight: 600, lineHeight: '28px', color: '#081732', letterSpacing: '1.6px' }}>
+      {/* Back button */}
+      <button
+        onClick={onBack}
+        onMouseEnter={() => setBackHovered(true)}
+        onMouseLeave={() => setBackHovered(false)}
+        style={{
+          width: 38, height: 38, flexShrink: 0, borderRadius: '50%',
+          border: backHovered ? 'none' : '0.3px solid rgba(20,57,125,0.25)',
+          background: backHovered ? 'linear-gradient(116.96deg, #2871fa 0%, #6717cd 100%)' : '#ffffff',
+          cursor: 'pointer', padding: 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          transition: 'background 0.15s, border 0.15s',
+        }}
+      >
+        <img
+          src={imgBackArrow} alt="Back"
+          style={{
+            width: 20, height: 20, objectFit: 'contain',
+            filter: backHovered ? 'brightness(0) invert(1)' : 'none',
+            transition: 'filter 0.15s',
+          }}
+        />
+      </button>
+
+      {/* Left: Title + meta */}
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <span style={{
+            fontSize: isMobile ? 18 : 24, fontWeight: 700,
+            color: '#081732', letterSpacing: '0.3px', lineHeight: '1.2',
+          }}>
             {borrower.name}
           </span>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10 }}>
-            {borrower.status === 'Review Needed' && (
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: 4,
-                background: '#fef3c6', border: '1px solid #d69200',
-                borderRadius: 30, padding: '5px 20px',
-              }}>
-                <img src={imgAlertTriangle} alt="" style={{ width: 12, height: 12 }} />
-                <span style={{ fontSize: 14, fontWeight: 700, color: '#d69200', letterSpacing: '-0.15px' }}>
-                  Review Needed
-                </span>
-              </div>
-            )}
+          {borrower.status === 'Review Needed' && (
             <div style={{
-              display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center',
-              fontSize: 14, color: '#081732', letterSpacing: '-0.15px', lineHeight: '20px',
+              display: 'flex', alignItems: 'center', gap: 4,
+              background: '#fef3c6', border: '1px solid #d69200',
+              borderRadius: 30, padding: '2px 10px', flexShrink: 0,
             }}>
-              <span style={{ color: '#4a5565' }}>•</span>
-              <span>{borrower.id}</span>
-              <span>•</span>
-              <span>{borrower.industry}</span>
-              <span>•</span>
-              <span>Last Review: {borrower.lastReview}</span>
+              <img src={imgAlertTriangle} alt="" style={{ width: 11, height: 11 }} />
+              <span style={{ fontSize: 12, fontWeight: 600, color: '#d69200', letterSpacing: '-0.1px' }}>
+                Review needed
+              </span>
             </div>
-          </div>
+          )}
+        </div>
+        <div style={{
+          display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 5,
+          fontSize: 12, color: '#4a5565', letterSpacing: '-0.1px', lineHeight: '18px',
+        }}>
+          <span>{borrower.id}</span>
+          <span style={{ color: 'rgba(74,85,101,0.4)' }}>•</span>
+          <span>{borrower.industry}</span>
+          <span style={{ color: 'rgba(74,85,101,0.4)' }}>•</span>
+          <span>Last review: {borrower.lastReview}</span>
         </div>
       </div>
 
-      {/* Right: risk score */}
-      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 16, padding: isMobile ? '0' : '10px 20px 20px', flexShrink: 0 }}>
-        <span style={{ fontSize: 14, fontWeight: 400, color: '#081732', letterSpacing: '-0.15px', lineHeight: '20px' }}>
-          Risk Score
-        </span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-          <span style={{ fontSize: isMobile ? 48 : 64, fontWeight: 400, color: rc, letterSpacing: '1.92px', lineHeight: 1 }}>
-            {borrower.riskScore}
-          </span>
+      {/* Right: Risk Score */}
+      <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
+
+        {/* Risk Score card */}
+        <div style={{
+          background: '#ffffff',
+          border: '0.3px solid rgba(20,57,125,0.15)',
+          borderRadius: 8, padding: '8px 14px',
+          display: 'flex', alignItems: 'center', gap: 10,
+        }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <span style={{ fontSize: 11, fontWeight: 400, color: 'rgba(74,85,101,0.65)', letterSpacing: '-0.1px', lineHeight: '14px' }}>
+              Risk Score
+            </span>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 3 }}>
+              <span style={{ fontSize: isMobile ? 22 : 26, fontWeight: 700, color: rc, letterSpacing: '0.5px', lineHeight: 1 }}>
+                {borrower.riskScore}
+              </span>
+              <span style={{ fontSize: 12, fontWeight: 400, color: 'rgba(74,85,101,0.55)' }}>
+                / 100
+              </span>
+            </div>
+          </div>
           <div style={{
             background: rc, borderRadius: 30, padding: '1px 10px',
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
@@ -83,6 +106,7 @@ export default function BorrowerHeader({ borrower, onBack }) {
             </span>
           </div>
         </div>
+
       </div>
     </div>
   );
