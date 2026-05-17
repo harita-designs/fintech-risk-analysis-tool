@@ -296,7 +296,6 @@ const PROFILE_DATA = {
 function ProfileBtn() {
   const [hovered, setHovered] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const { isMobile } = useBreakpoint();
   const ref = useRef(null);
   useClickOutside(ref, showDropdown, () => setShowDropdown(false));
 

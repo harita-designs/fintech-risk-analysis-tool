@@ -1,7 +1,6 @@
 import { imgTransaction, imgRating, imgWarningShield, imgSurvey } from '../assets/images';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 
-const GRADIENT = 'linear-gradient(116.96deg, rgba(40,113,250,0.05) 50.33%, rgba(103,23,205,0.05) 95.81%)';
 
 function TrendBadge({ text, green }) {
   const color = green ? '#05c04b' : '#e9000b';

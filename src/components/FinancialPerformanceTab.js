@@ -3,7 +3,6 @@ import { imgFPCheckCircle, imgFPAlertCircle } from '../assets/images';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const CARD_BG  = '#fefdff';
-const INNER_BG = 'linear-gradient(114deg, rgba(40,113,250,0.05) 50.33%, rgba(103,23,205,0.05) 95.81%)';
 const QUARTERS = ['Q1 2025', 'Q2 2025', 'Q3 2025', 'Q4 2025', 'Q1 2026'];
 const Y_LABELS = [100, 75, 50, 25, 0];
 
@@ -324,7 +323,6 @@ function RatioCard({ ratio, cardFlex }) {
 
 export default function FinancialPerformanceTab() {
   const { isMobile, isTablet, isDesktop } = useBreakpoint();
-  const isStacked = isMobile || isTablet;
   const ratioFlex = isMobile ? '0 0 100%' : isTablet ? '0 0 calc(50% - 8px)' : '1 0 0';
 
   return (
